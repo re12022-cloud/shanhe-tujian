@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>山河图鉴 - 点亮文物，收藏中华千年之美</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+    :root {
+      --paper: #F5E6C8;
+      --paper-dark: #E8D4B0;
+      --ink: #2C2416;
+      --ink-light: #6B5D4F;
+      --ink-muted: #A89882;
+      --cinnabar: #C9372C;
+      --cinnabar-light: #E8554A;
+      --gold: #C9A961;
+      --gold-light: #E0C98A;
+      --jade: #5A8F7A;
+      --jade-light: #7ABFA5;
+      --sky: #B8D4E3;
+      --card-bg: rgba(248, 240, 224, 0.85);
+      --shadow: rgba(61, 46, 31, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    /* ===== SPLASH SCREEN ===== */
+    #splash {
+      position: fixed; inset: 0; z-index: 1000;
+      background: #F5E6C8;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    #splash.fade-out {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+    .splash-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      animation: splashFadeIn 1.5s ease forwards;
+    }
+    @keyframes splashFadeIn {
+      from { opacity: 0; transform: scale(1.08); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .skip-btn {
+      position: absolute; top: 28px; right: 28px;
+      padding: 8px 20px;
+      border: 1px solid rgba(107, 93, 79, 0.3);
+      border-radius: 20px;
+      background: rgba(74, 74, 74, 0.85);
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      z-index: 1001;
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: fadeInSkip 0.5s 1s forwards;
+      backdrop-filter: blur(4px);
+    }
+    .skip-btn:hover {
+      background: rgba(44, 36, 22, 0.9);
+      border-color: rgba(107, 93, 79, 0.5);
+    }
+    @keyframes fadeInSkip { to { opacity: 1; } }
+
+    /* ===== MAIN APP ===== */
+    #app {
+      width: 100%; height: 100%;
+      display: none;
+      flex-direction: column;
+      background: var(--paper);
+      overflow: hidden;
+    }
+    #app.active { display: flex; }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px 8px;
+      background: linear-gradient(180deg, var(--paper), transparent);
+      position: relative; z-index: 10;
+    }
+    .top-bar-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px; font-weight: 700;
+      letter-spacing: 6px;
+      color: var(--ink);
+    }
+    .top-bar-actions { display: flex; gap: 12px; }
+    .top-bar-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(107, 93, 79, 0.2);
+      background: var(--card-bg);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .top-bar-btn:hover { background: var(--ink); color: var(--paper); }
+    .top-bar-btn svg { width: 18px; height: 18px; }
+    .notification-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 7px; height: 7px;
+      background: var(--cinnabar);
+      border-radius: 50%;
+    }
+
+    /* Decorative divider */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px 8px;
+    }
+    .divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ink-muted), transparent);
+    }
+    .divider-icon {
+      color: var(--gold);
+      font-size: 14px;
+    }
+    .divider-text {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 14px; font-weight: 600;
+      color: var(--ink-light);
+      letter-spacing: 4px;
+      white-space: nowrap;
+    }
+
+    /* ===== SEARCH BAR ===== */
+    .search-bar {
+      display: flex; align-items: center;
+      margin: 8px 16px 4px;
+      padding: 10px 14px;
+      background: var(--card-bg);
+      border: 1px solid rgba(107, 93, 79, 0.12);
+      border-radius: 24px;
+      box-shadow: 0 2px 8px var(--shadow);
+      gap: 8px;
+    }
+    .search-icon {
+      font-size: 16px;
+      color: var(--ink-muted);
+      flex-shrink: 0;
+    }
+    .search-input {
+      flex: 1;
+      border: none; background: none; outline: none;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .search-input::placeholder {
+      color: var(--ink-muted);
+      font-size: 13px;
+    }
+    .search-clear {
+      display: none;
+      font-size: 14px; color: var(--ink-muted);
+      cursor: pointer; padding: 2px 6px;
+      border-radius: 50%;
+    }
+    .search-clear:hover { background: rgba(107, 93, 79, 0.1); }
+    .search-clear.show { display: block; }
+
+/* ===== CITY SELECTOR ===== */
+.city-selector-wrap {
+  margin: 0 16px 4px;
+  position: relative;
+}
+.city-selector-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  background: var(--card-bg);
+  border: 1px solid rgba(107, 93, 79, 0.1);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.city-selector-bar:hover { border-color: var(--gold); }
+.city-selector-bar .city-label {
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  display: flex; align-items: center; gap: 4px;
+}
+.city-selector-bar .city-label .city-icon { font-size: 14px; }
+.city-selector-bar .city-arrow { font-size: 10px; color: var(--ink-muted); margin-left: auto; }
+
+.city-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: var(--card-bg);
+  border: 1px solid rgba(107, 93, 79, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px var(--shadow);
+  z-index: 100;
+  display: none;
+  padding: 12px;
+  max-height: 320px;
+  overflow-y: auto;
+  animation: popupSlide 0.2s ease;
+}
+.city-dropdown.show { display: block; }
+.city-dropdown-title {
+  font-size: 11px; color: var(--ink-muted); margin-bottom: 8px;
+  letter-spacing: 2px; font-weight: 500;
+}
+.city-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 12px;
+}
+.city-tag {
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  background: rgba(107, 93, 79, 0.06);
+  color: var(--ink-light);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.city-tag:hover { background: var(--ink); color: var(--paper); }
+.city-tag.active {
+  background: var(--cinnabar);
+  color: #fff;
+  border-color: var(--cinnabar);
+}
+.city-museum-list { margin-top: 4px; }
+.city-museum-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(107, 93, 79, 0.06);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.city-museum-item:last-child { border-bottom: none; }
+.city-museum-item:hover { background: rgba(107, 93, 79, 0.04); }
+.city-museum-icon { font-size: 20px; flex-shrink: 0; }
+.city-museum-info { flex: 1; min-width: 0; }
+.city-museum-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.city-museum-desc { font-size: 11px; color: var(--muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.city-museum-arrow { font-size: 12px; color: var(--ink-muted); }
+
+/* ===== SEARCH TABS ===== */
+.search-tabs {
+  display: none;
+  margin: 0 16px 4px;
+  gap: 0;
+  border-bottom: 1px solid rgba(107, 93, 79, 0.1);
+}
+.search-tabs.show { display: flex; }
+.search-tab {
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.search-tab.active {
+  color: var(--cinnabar);
+  border-bottom-color: var(--cinnabar);
+  font-weight: 600;
+}
+
+/* ===== SEARCH RESULTS ===== */
+.search-results {
+  display: none;
+  padding: 0 16px 8px;
+}
+.search-results.show { display: block; }
+.search-result-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px;
+  margin-bottom: 6px;
+  background: var(--card-bg);
+  border: 1px solid rgba(107, 93, 79, 0.08);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.search-result-item:hover {
+  border-color: var(--gold);
+  transform: translateX(2px);
+}
+.search-result-icon { font-size: 24px; flex-shrink: 0; }
+.search-result-info { flex: 1; min-width: 0; }
+.search-result-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.search-result-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.search-result-tag {
+  flex-shrink: 0;
+  font-size: 10px; padding: 2px 8px;
+  border-radius: 8px;
+  background: rgba(201, 169, 97, 0.12);
+  color: var(--gold);
+  font-weight: 500;
+}
+.search-empty {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+    /* ===== MAP SECTION ===== */
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 80px;
+    }
+    .scroll-content::-webkit-scrollbar { width: 0; }
+
+    .map-section {
+      padding: 0 16px;
+      margin-top: 4px;
+    }
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(107, 93, 79, 0.15);
+      box-shadow: 0 4px 20px var(--shadow);
+      background: #F0E8D8;
+    }
+    .map-canvas {
+      width: 100%; height: 100%;
+    }
+
+    /* Map locate button */
+    .locate-btn {
+      position: absolute;
+      bottom: 12px; right: 12px;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(107, 93, 79, 0.15);
+      background: rgba(248, 240, 224, 0.95);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px var(--shadow);
+      z-index: 10;
+      transition: all 0.2s;
+      font-size: 18px;
+    }
+    .locate-btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+      transform: scale(1.1);
+    }
+    .locate-btn.pulse {
+      animation: locatePulse 0.6s ease;
+    }
+    @keyframes locatePulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* Museum markers */
+    .museum-marker {
+      position: absolute;
+      cursor: pointer;
+      display: flex; flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s;
+      z-index: 5;
+    }
+    .museum-marker:hover { transform: scale(1.15); }
+    .museum-marker.bounce {
+      animation: markerBounce 0.5s ease;
+    }
+    @keyframes markerBounce {
+      0%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-8px); }
+      70% { transform: translateY(-3px); }
+    }
+
+    .marker-pin {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 2px 8px var(--shadow);
+      position: relative;
+    }
+    .marker-pin.museum { background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-light)); }
+    .marker-pin.exhibition { background: linear-gradient(135deg, var(--jade), var(--jade-light)); }
+    .marker-pin::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+    }
+    .marker-pin.museum::after { border-top: 6px solid var(--cinnabar); }
+    .marker-pin.exhibition::after { border-top: 6px solid var(--jade); }
+
+    .marker-pulse {
+      position: absolute; inset: -4px;
+      border-radius: 50%;
+      border: 2px solid var(--cinnabar);
+      animation: pulse 2s ease-out infinite;
+      opacity: 0;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      100% { transform: scale(1.8); opacity: 0; }
+    }
+
+    .marker-label {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--ink);
+      background: rgba(248, 240, 224, 0.9);
+      padding: 2px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+      box-shadow: 0 1px 4px var(--shadow);
+      font-weight: 500;
+    }
+    .marker-distance {
+      font-size: 10px;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+
+    /* Museum info popup */
+    .museum-popup {
+      position: absolute;
+      bottom: 12px; left: 12px; right: 12px;
+      background: rgba(248, 240, 224, 0.95);
+      border: 1px solid rgba(107, 93, 79, 0.2);
+      border-radius: 12px;
+      padding: 14px 16px;
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      display: none;
+      animation: popupSlide 0.3s ease;
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+    .museum-popup.show { display: block; }
+    @keyframes popupSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .popup-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 16px; font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .popup-desc {
+      font-size: 12px; color: var(--ink-light);
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .popup-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .popup-tag {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(201, 169, 97, 0.15);
+      color: var(--ink-light);
+      border: 1px solid rgba(201, 169, 97, 0.3);
+    }
+    .popup-actions { display: flex; gap: 8px; }
+    .popup-btn {
+      flex: 1;
+      padding: 8px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 12px; font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .popup-btn-primary {
+      background: var(--cinnabar);
+      color: white;
+    }
+    .popup-btn-primary:hover { background: var(--cinnabar-light); }
+    .popup-btn-secondary {
+      background: rgba(107, 93, 79, 0.08);
+      color: var(--ink-light);
+      border: 1px solid rgba(107, 93, 79, 0.15);
+    }
+    .popup-close {
+      position: absolute; top: 10px; right: 12px;
+      width: 24px; height: 24px;
+      border: none; background: none;
+      cursor: pointer; font-size: 16px;
+      color: var(--ink-muted);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+    .popup-close:hover { background: rgba(107, 93, 79, 0.1); }
+
+    /* ===== EXHIBITION SECTION ===== */
+    .exhibition-scroll {
+      display: flex; gap: 12px;
+      padding: 0 20px 4px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .exhibition-scroll::-webkit-scrollbar { display: none; }
+
+    .exhibition-card {
+      flex: 0 0 200px;
+      scroll-snap-align: start;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card-bg);
+      border: 1px solid rgba(107, 93, 79, 0.1);
+      box-shadow: 0 2px 12px var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .exhibition-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+    .exhibition-cover {
+      width: 100%; height: 130px;
+      object-fit: cover;
+      display: block;
+    }
+    .exhibition-info { padding: 10px 12px; }
+    .exhibition-title {
+      font-size: 13px; font-weight: 600;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .exhibition-meta {
+      font-size: 11px;
+      color: var(--ink-muted);
+      margin-top: 6px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .exhibition-badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--cinnabar);
+      color: white;
+      font-weight: 500;
+    }
+    .exhibition-badge.jade {
+      background: var(--jade);
+    }
+    .exhibition-badge.free {
+      background: var(--gold);
+    }
+    .exhibition-date {
+      font-size: 11px;
+      color: var(--ink-light);
+      margin-top: 4px;
+      display: flex; align-items: center; gap: 3px;
+    }
+    .exhibition-venue {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .exhibition-price {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--cinnabar);
+      margin-top: 4px;
+    }
+    .exhibition-price.free {
+      color: var(--jade);
+    }
+
+    /* Free exhibition compact list */
+    .free-exhibition-list {
+      padding: 0 20px;
+      margin-top: 12px;
+    }
+    .free-exhibition-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      background: var(--card-bg);
+      border: 1px solid rgba(107, 93, 79, 0.08);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .free-exhibition-item:hover {
+      border-color: var(--gold);
+      transform: translateX(4px);
+    }
+    .free-exhibition-info {
+      flex: 1; min-width: 0;
+    }
+    .free-exhibition-name {
+      font-size: 13px; font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .free-exhibition-meta {
+      font-size: 10px; color: var(--muted);
+      margin-top: 2px;
+    }
+    .free-exhibition-tag {
+      flex-shrink: 0;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 8px;
+      background: rgba(201, 169, 97, 0.12);
+      color: var(--gold);
+      font-weight: 500;
+      margin-left: 8px;
+    }
+
+    /* ===== COLLECTION SECTION ===== */
+    .collection-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px 10px;
+    }
+    .collection-stats {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px;
+      color: var(--ink-light);
+    }
+    .collection-stats .lantern { font-size: 16px; }
+    .collection-count {
+      font-weight: 700;
+      color: var(--cinnabar);
+    }
+    .collection-link {
+      font-size: 12px;
+      color: var(--gold);
+      cursor: pointer;
+      display: flex; align-items: center; gap: 2px;
+    }
+    .collection-link:hover { color: var(--ink); }
+
+    .progress-bar {
+      margin: 0 20px 12px;
+      height: 6px;
+      background: rgba(107, 93, 79, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cinnabar), var(--gold));
+      border-radius: 3px;
+      transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .collection-scroll {
+      display: flex; gap: 10px;
+      padding: 0 20px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .collection-scroll::-webkit-scrollbar { display: none; }
+
+    .artifact-card {
+      flex: 0 0 120px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card-bg);
+      border: 1px solid rgba(107, 93, 79, 0.1);
+      box-shadow: 0 2px 10px var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .artifact-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+    .artifact-card.lit {
+      border: 1px solid rgba(201, 169, 97, 0.4);
+      box-shadow: 0 2px 12px rgba(201, 169, 97, 0.15);
+    }
+    .artifact-card.lit::after {
+      content: '';
+      position: absolute; top: 6px; right: 6px;
+      width: 28px; height: 36px;
+      background: url('assets/seal-lit.png') center/contain no-repeat;
+      opacity: 0.9;
+    }
+    .artifact-card.locked { opacity: 0.55; }
+    .artifact-card.locked::after {
+      content: '🔒';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      background: rgba(245, 230, 200, 0.55);
+    }
+    .artifact-img {
+      width: 100%; height: 100px;
+      object-fit: cover;
+      display: block;
+    }
+    .artifact-name {
+      padding: 8px 8px;
+      font-size: 11px;
+      text-align: center;
+      font-family: 'Noto Serif SC', serif;
+      line-height: 1.3;
+    }
+
+    /* ===== BOTTOM NAVIGATION ===== */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 64px;
+      background: rgba(248, 240, 224, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(107, 93, 79, 0.12);
+      display: flex; align-items: center; justify-content: space-around;
+      z-index: 100;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 3px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 12px;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .nav-item.active { color: var(--cinnabar); }
+    .nav-item:not(.active) { color: var(--ink-muted); }
+    .nav-item:hover { background: rgba(107, 93, 79, 0.06); }
+    .nav-icon { font-size: 22px; }
+    .nav-label { font-size: 10px; font-weight: 500; }
+    .nav-dot {
+      position: absolute; top: 4px; right: 8px;
+      width: 5px; height: 5px;
+      background: var(--cinnabar);
+      border-radius: 50%;
+    }
+
+    /* ===== FLOATING LANTERNS ===== */
+    .floating-lanterns {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .lantern {
+      position: absolute;
+      font-size: 20px;
+      opacity: 0;
+      animation: lanternRise linear forwards;
+    }
+    @keyframes lanternRise {
+      0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+      15%  { opacity: 0.6; }
+      85%  { opacity: 0.3; }
+      100% { opacity: 0; transform: translateY(-100vh) scale(0.3); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 375px) {
+      .map-container { height: 220px; }
+      .exhibition-card { flex: 0 0 170px; }
+    }
+
+    @media (min-width: 768px) {
+      .scroll-content { padding-bottom: 20px; }
+      .bottom-nav {
+        position: relative;
+        justify-content: center;
+        gap: 40px;
+        border-top: 1px solid rgba(107, 93, 79, 0.08);
+      }
+    }
+
+    /* ===== ARTIFACT MODAL ===== */
+    .artifact-modal {
+      position: fixed; inset: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .artifact-modal-overlay {
+      position: absolute; inset: 0;
+      background: rgba(44, 36, 22, 0.6);
+      backdrop-filter: blur(4px);
+    }
+    .artifact-modal-content {
+      position: relative;
+      width: 90%; max-width: 400px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: var(--paper);
+      border: 1px solid rgba(107, 93, 79, 0.2);
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(61, 46, 31, 0.3);
+      animation: modalIn 0.3s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .artifact-modal-close {
+      position: absolute; top: 10px; right: 12px;
+      width: 32px; height: 32px;
+      border: none; border-radius: 50%;
+      background: rgba(245, 230, 200, 0.9);
+      color: var(--ink-light);
+      font-size: 16px; cursor: pointer;
+      z-index: 5;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .artifact-modal-close:hover { background: var(--ink); color: var(--paper); }
+    .artifact-modal-img-wrapper {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(180deg, var(--paper-dark), var(--paper));
+      padding: 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .artifact-modal-img-wrapper img {
+      max-width: 100%; max-height: 220px;
+      object-fit: contain;
+      border-radius: 8px;
+      filter: drop-shadow(0 4px 12px rgba(61, 46, 31, 0.2));
+    }
+    .artifact-modal-seal {
+      position: absolute; bottom: 16px; right: 24px;
+      width: 48px; height: 60px;
+      background: url('assets/seal-lit.png') center/contain no-repeat;
+      opacity: 0.7;
+      transform: rotate(-8deg);
+    }
+    .artifact-modal-info {
+      padding: 20px 24px 24px;
+    }
+    .artifact-modal-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 11px; font-weight: 500;
+      background: rgba(201, 169, 97, 0.15);
+      color: #9A7B3E;
+      border: 1px solid rgba(201, 169, 97, 0.3);
+      margin-bottom: 10px;
+    }
+    .artifact-modal-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px; font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .artifact-modal-era {
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .artifact-modal-story {
+      font-size: 14px; color: var(--ink-light);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .artifact-modal-action {
+      display: flex; gap: 10px;
+    }
+    .artifact-modal-action button {
+      flex: 1;
+      padding: 10px 0;
+      border: none; border-radius: 8px;
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .artifact-modal-action button:first-child {
+      background: var(--cinnabar);
+      color: #fff;
+    }
+    .artifact-modal-action button:first-child:hover { background: var(--cinnabar-light); }
+    .artifact-modal-action button:last-child {
+      background: rgba(107, 93, 79, 0.08);
+      color: var(--ink-light);
+      border: 1px solid rgba(107, 93, 79, 0.15);
+    }
+    .artifact-modal-action button:last-child:hover { background: rgba(107, 93, 79, 0.15); }
+
+    /* ===== BOOKING MODAL ===== */
+    .booking-modal {
+      position: fixed; inset: 0; z-index: 1000;
+      display: none; flex-direction: column;
+      background: var(--paper);
+      animation: slideUp 0.35s ease;
+    }
+    .booking-modal.show { display: flex; }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .booking-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      background: linear-gradient(180deg, var(--paper), transparent);
+      border-bottom: 1px solid var(--rule);
+    }
+    .booking-header-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px; font-weight: 700;
+      letter-spacing: 3px;
+    }
+    .booking-close {
+      width: 36px; height: 36px;
+      border: none; border-radius: 50%;
+      background: rgba(107, 93, 79, 0.08);
+      color: var(--ink-light);
+      font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .booking-close:hover { background: var(--ink); color: var(--paper); }
+
+    /* Steps */
+    .booking-steps {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 16px 20px 8px;
+    }
+    .step-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+      border: 2px solid var(--rule);
+      color: var(--muted);
+      background: var(--paper);
+      transition: all 0.3s;
+    }
+    .step-dot.active {
+      border-color: var(--cinnabar);
+      background: var(--cinnabar);
+      color: #fff;
+    }
+    .step-dot.done {
+      border-color: var(--jade);
+      background: var(--jade);
+      color: #fff;
+    }
+    .step-line {
+      width: 24px; height: 2px;
+      background: var(--rule);
+      transition: all 0.3s;
+    }
+    .step-line.done { background: var(--jade); }
+
+    /* Booking body */
+    .booking-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px 80px;
+    }
+    .booking-step { display: none; }
+    .booking-step.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+    .booking-museum-info {
+      background: var(--card-bg);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .booking-museum-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 16px; font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .booking-museum-meta {
+      font-size: 12px; color: var(--muted);
+    }
+
+    .booking-label {
+      font-size: 14px; font-weight: 600;
+      color: var(--ink-light);
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* Date picker */
+    .date-scroll {
+      display: flex; gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .date-scroll::-webkit-scrollbar { display: none; }
+    .date-card {
+      flex: 0 0 72px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 12px 0;
+      border: 2px solid var(--rule);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--card-bg);
+    }
+    .date-card:hover { border-color: var(--gold); }
+    .date-card.selected {
+      border-color: var(--cinnabar);
+      background: rgba(201, 55, 44, 0.06);
+    }
+    .date-card .day-name {
+      font-size: 11px; color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .date-card .day-num {
+      font-size: 20px; font-weight: 700;
+      color: var(--ink);
+    }
+    .date-card.selected .day-num { color: var(--cinnabar); }
+    .date-card .day-mon {
+      font-size: 10px; color: var(--muted);
+      margin-top: 2px;
+    }
+    .date-card.today {
+      position: relative;
+    }
+    .date-card.today::after {
+      content: '今天';
+      position: absolute; top: -6px;
+      font-size: 9px;
+      padding: 1px 6px;
+      border-radius: 8px;
+      background: var(--cinnabar);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* Time slots */
+    .time-slots {
+      display: flex; flex-direction: column;
+      gap: 12px;
+    }
+    .time-slot {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      border: 2px solid var(--rule);
+      border-radius: 12px;
+      cursor: pointer;
+      background: var(--card-bg);
+      transition: all 0.2s;
+    }
+    .time-slot:hover { border-color: var(--gold); }
+    .time-slot.selected {
+      border-color: var(--cinnabar);
+      background: rgba(201, 55, 44, 0.04);
+    }
+    .time-slot-info { display: flex; flex-direction: column; gap: 2px; }
+    .time-slot-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .time-slot-range { font-size: 12px; color: var(--muted); }
+    .time-slot-badge {
+      font-size: 11px; padding: 3px 10px;
+      border-radius: 10px;
+      background: rgba(90, 143, 122, 0.1);
+      color: var(--jade);
+      font-weight: 500;
+    }
+    .time-slot-badge.low {
+      background: rgba(201, 55, 44, 0.1);
+      color: var(--cinnabar);
+    }
+
+    /* Visitor count */
+    .visitor-control {
+      display: flex; align-items: center; justify-content: center;
+      gap: 24px; padding: 20px;
+    }
+    .visitor-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--rule);
+      background: var(--card-bg);
+      font-size: 20px; color: var(--ink);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .visitor-btn:hover { border-color: var(--gold); background: var(--gold-light); }
+    .visitor-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .visitor-count {
+      font-size: 32px; font-weight: 700;
+      color: var(--ink);
+      min-width: 50px; text-align: center;
+      font-family: 'Noto Serif SC', serif;
+    }
+
+    /* Summary */
+    .booking-summary {
+      background: var(--card-bg);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .summary-row {
+      display: flex; justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 14px;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-label { color: var(--muted); }
+    .summary-value { color: var(--ink); font-weight: 600; }
+
+    /* Ticket */
+    .ticket-card {
+      background: linear-gradient(135deg, var(--paper-dark), var(--paper));
+      border: 2px solid var(--gold);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .ticket-card::before {
+      content: '';
+      position: absolute; top: -40px; left: -40px;
+      width: 100px; height: 100px;
+      background: radial-gradient(circle, rgba(201,169,97,0.15), transparent);
+      border-radius: 50%;
+    }
+    .ticket-icon { font-size: 48px; margin-bottom: 12px; }
+    .ticket-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px; font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .ticket-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+    .ticket-qr {
+      width: 140px; height: 140px;
+      margin: 0 auto 16px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    .ticket-qr svg { width: 100%; height: 100%; }
+    .ticket-code {
+      font-family: monospace;
+      font-size: 13px; color: var(--ink-light);
+      letter-spacing: 2px;
+    }
+    .ticket-hint {
+      font-size: 11px; color: var(--muted);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule);
+    }
+
+    /* Booking footer */
+    .booking-footer {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      padding: 12px 20px 20px;
+      background: linear-gradient(0deg, var(--paper), transparent);
+      display: flex; gap: 12px;
+      z-index: 10;
+    }
+    .booking-btn {
+      flex: 1; padding: 12px 0;
+      border: none; border-radius: 10px;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .booking-btn-secondary {
+      background: rgba(107, 93, 79, 0.08);
+      color: var(--ink-light);
+      border: 1px solid rgba(107, 93, 79, 0.15);
+    }
+    .booking-btn-secondary:hover { background: rgba(107, 93, 79, 0.15); }
+    .booking-btn-primary {
+      background: var(--cinnabar);
+      color: #fff;
+    }
+    .booking-btn-primary:hover { background: var(--cinnabar-light); }
+    .booking-btn-primary:disabled {
+      opacity: 0.5; cursor: not-allowed;
+    }
+
+    .booking-demo-note {
+      text-align: center;
+      font-size: 11px; color: var(--muted);
+      padding: 8px 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== SPLASH SCREEN ===== -->
+<div id="splash">
+  <img class="splash-bg" src="assets/splash-new.png" alt="山河图鉴" />
+  <button class="skip-btn" id="skipBtn" onclick="skipSplash()">3s 跳过</button>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="app">
+  <!-- Floating lanterns background -->
+  <div class="floating-lanterns" id="lanterns"></div>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-title">山河图鉴</div>
+    <div class="top-bar-actions">
+      <div class="top-bar-btn" onclick="showNotifications()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <div class="notification-dot"></div>
+      </div>
+      <div class="top-bar-btn" onclick="showProfile()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- City Selector -->
+  <div class="city-selector-wrap" id="citySelectorWrap">
+    <div class="city-selector-bar" id="citySelectorBar" onclick="toggleCityDropdown()">
+      <div class="city-label">
+        <span class="city-icon">📍</span>
+        <span id="currentCityName">南京</span>
+      </div>
+      <span class="city-arrow">▼</span>
+    </div>
+    <div class="city-dropdown" id="cityDropdown">
+      <div class="city-dropdown-title">热门城市</div>
+      <div class="city-tags" id="cityTags"></div>
+      <div class="city-dropdown-title">当前城市博物馆</div>
+      <div class="city-museum-list" id="cityMuseumList"></div>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" placeholder="搜索博物馆、展览、文物..." oninput="handleSearch(this.value)" />
+    <span class="search-clear" id="searchClear" onclick="clearSearch()">✕</span>
+  </div>
+
+    <!-- Search Tabs -->
+    <div class="search-tabs" id="searchTabs">
+      <div class="search-tab active" onclick="switchSearchTab(this, 'all')">全部</div>
+      <div class="search-tab" onclick="switchSearchTab(this, 'museum')">博物馆</div>
+      <div class="search-tab" onclick="switchSearchTab(this, 'exhibition')">展览</div>
+      <div class="search-tab" onclick="switchSearchTab(this, 'artifact')">文物</div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="search-results" id="searchResults"></div>
+
+  <!-- Scrollable Content -->
+  <div class="scroll-content">
+
+    <!-- Map Section -->
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-icon">🗺️</div>
+      <div class="divider-text">附近博物馆</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="map-section">
+      <div class="map-container" id="mapContainer">
+        <canvas class="map-canvas" id="mapCanvas"></canvas>
+
+        <!-- Museum Markers -->
+        <div class="museum-marker" style="left: 25%; top: 30%;" onclick="showMuseumPopup(0, this)">
+          <div class="marker-pin museum">
+            <div class="marker-pulse"></div>
+            🏛️
+          </div>
+          <div class="marker-label">南京博物院</div>
+          <div class="marker-distance">1.2km</div>
+        </div>
+
+        <div class="museum-marker" style="left: 55%; top: 20%;" onclick="showMuseumPopup(1, this)">
+          <div class="marker-pin museum">
+            <div class="marker-pulse"></div>
+            🏯
+          </div>
+          <div class="marker-label">德基艺术博物馆</div>
+          <div class="marker-distance">2.8km</div>
+        </div>
+
+        <div class="museum-marker" style="left: 78%; top: 45%;" onclick="showMuseumPopup(2, this)">
+          <div class="marker-pin museum">
+            <div class="marker-pulse"></div>
+            🏘️
+          </div>
+          <div class="marker-label">六朝博物馆</div>
+          <div class="marker-distance">3.5km</div>
+        </div>
+
+        <div class="museum-marker" style="left: 40%; top: 65%;" onclick="showMuseumPopup(3, this)">
+          <div class="marker-pin exhibition">
+            🎨
+          </div>
+          <div class="marker-label">金陵图特展</div>
+          <div class="marker-distance">4.1km</div>
+        </div>
+
+        <div class="museum-marker" style="left: 15%; top: 60%;" onclick="showMuseumPopup(4, this)">
+          <div class="marker-pin exhibition">
+            📜
+          </div>
+          <div class="marker-label">明城墙遗址</div>
+          <div class="marker-distance">5.3km</div>
+        </div>
+
+        <!-- Museum Popup -->
+        <div class="museum-popup" id="museumPopup">
+          <button class="popup-close" onclick="closePopup()">✕</button>
+          <div class="popup-name" id="popupName"></div>
+          <div class="popup-desc" id="popupDesc"></div>
+          <div class="popup-tags" id="popupTags"></div>
+          <div class="popup-actions">
+            <button class="popup-btn popup-btn-primary" id="popupBtn1"></button>
+            <button class="popup-btn popup-btn-secondary" id="popupBtn2"></button>
+          </div>
+        </div>
+
+        <!-- Locate Button -->
+        <div class="locate-btn" onclick="locateUser()" title="定位到我的位置">📍</div>
+      </div>
+    </div>
+
+    <!-- Exhibition Section -->
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-icon">🏮</div>
+      <div class="divider-text">南京近期展览</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="exhibition-scroll" id="exhibitionScroll"></div>
+
+    <!-- Free Exhibition List -->
+    <div class="divider" style="margin-top: 12px;">
+      <div class="divider-line"></div>
+      <div class="divider-icon">✨</div>
+      <div class="divider-text">免费展览</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="free-exhibition-list" id="freeExhibitionList"></div>
+
+    <!-- Collection Section -->
+    <div class="divider" style="margin-top: 8px;">
+      <div class="divider-line"></div>
+      <div class="divider-icon">📜</div>
+      <div class="divider-text">我的收藏</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="collection-header">
+      <div class="collection-stats">
+        <span class="lantern">🏮</span>
+        <span>已点亮 <span class="collection-count">3</span> / 5</span>
+      </div>
+      <div class="collection-link" onclick="openCollection()">
+        查看全部 →
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+
+    <div class="collection-scroll">
+      <div class="artifact-card lit" onclick="openArtifact(0)">
+        <img class="artifact-img" src="assets/niudeng_color.png" alt="东汉铜牛灯" />
+        <div class="artifact-name">东汉铜牛灯</div>
+      </div>
+      <div class="artifact-card lit" onclick="openArtifact(1)">
+        <img class="artifact-img" src="assets/panchilu_color.png" alt="乾隆芙蓉石蟠螭纹耳盖炉" />
+        <div class="artifact-name">乾隆蟠螭耳盖炉</div>
+      </div>
+      <div class="artifact-card lit" onclick="openArtifact(2)">
+        <img class="artifact-img" src="assets/shenshouzun_color.png" alt="青釉神兽尊" />
+        <div class="artifact-name">青釉神兽尊</div>
+      </div>
+      <div class="artifact-card locked" onclick="openArtifact(3)">
+        <img class="artifact-img" src="assets/jinpan_color.png" alt="四合如意云纹金盘" />
+        <div class="artifact-name">???</div>
+      </div>
+      <div class="artifact-card locked" onclick="openArtifact(4)">
+        <img class="artifact-img" src="assets/meiping_color.png" alt="吉州窑白釉褐彩梅瓶" />
+        <div class="artifact-name">???</div>
+      </div>
+    </div>
+
+    <div style="height: 20px;"></div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab(this, 'explore')">
+      <span class="nav-icon">🗺️</span>
+      <span class="nav-label">探索</span>
+    </div>
+    <div class="nav-item" onclick="switchTab(this, 'light')">
+      <span class="nav-icon">🏮</span>
+      <span class="nav-label">点亮</span>
+      <div class="nav-dot"></div>
+    </div>
+    <div class="nav-item" onclick="switchTab(this, 'collection')">
+      <span class="nav-icon">📖</span>
+      <span class="nav-label">图鉴</span>
+    </div>
+    <div class="nav-item" onclick="switchTab(this, 'profile')">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">我的</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BOOKING MODAL ===== -->
+<div class="booking-modal" id="bookingModal">
+  <div class="booking-header">
+    <div class="booking-header-title">预约参观</div>
+    <button class="booking-close" onclick="closeBooking()">✕</button>
+  </div>
+
+  <!-- Steps indicator -->
+  <div class="booking-steps">
+    <div class="step-dot active" id="stepDot1">1</div>
+    <div class="step-line" id="stepLine1"></div>
+    <div class="step-dot" id="stepDot2">2</div>
+    <div class="step-line" id="stepLine2"></div>
+    <div class="step-dot" id="stepDot3">3</div>
+    <div class="step-line" id="stepLine3"></div>
+    <div class="step-dot" id="stepDot4">4</div>
+  </div>
+
+  <div class="booking-body">
+    <!-- Step 1: Date -->
+    <div class="booking-step active" id="bookingStep1">
+      <div class="booking-museum-info">
+        <div class="booking-museum-name" id="bookingMuseumName">南京博物院</div>
+        <div class="booking-museum-meta">每日18:00放票 · 可提前7天预约 · 周一闭馆</div>
+      </div>
+      <div class="booking-label">📅 选择参观日期</div>
+      <div class="date-scroll" id="dateScroll"></div>
+    </div>
+
+    <!-- Step 2: Time slot -->
+    <div class="booking-step" id="bookingStep2">
+      <div class="booking-label">🕐 选择入馆时段</div>
+      <div class="time-slots">
+        <div class="time-slot" id="timeSlot1" onclick="selectTime('am')">
+          <div class="time-slot-info">
+            <div class="time-slot-name">上午场</div>
+            <div class="time-slot-range">09:00 - 12:00</div>
+          </div>
+          <div class="time-slot-badge" id="badgeAm">余票充足</div>
+        </div>
+        <div class="time-slot" id="timeSlot2" onclick="selectTime('pm')">
+          <div class="time-slot-info">
+            <div class="time-slot-name">下午场</div>
+            <div class="time-slot-range">12:00 - 17:00</div>
+          </div>
+          <div class="time-slot-badge" id="badgePm">余票充足</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Visitors & Summary -->
+    <div class="booking-step" id="bookingStep3">
+      <div class="booking-label">👥 预约人数</div>
+      <div class="visitor-control">
+        <button class="visitor-btn" id="visitorMinus" onclick="changeVisitor(-1)">−</button>
+        <div class="visitor-count" id="visitorCount">1</div>
+        <button class="visitor-btn" id="visitorPlus" onclick="changeVisitor(1)">+</button>
+      </div>
+      <div class="booking-label" style="margin-top:20px">📝 预约信息确认</div>
+      <div class="booking-summary">
+        <div class="summary-row">
+          <span class="summary-label">参观场馆</span>
+          <span class="summary-value" id="summaryMuseum">南京博物院</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">参观日期</span>
+          <span class="summary-value" id="summaryDate">-</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">入馆时段</span>
+          <span class="summary-value" id="summaryTime">-</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">预约人数</span>
+          <span class="summary-value" id="summaryVisitors">1人</span>
+        </div>
+      </div>
+      <div class="booking-demo-note">* 本演示为模拟预约流程，实际预约请跳转官方小程序</div>
+    </div>
+
+    <!-- Step 4: Success -->
+    <div class="booking-step" id="bookingStep4">
+      <div class="ticket-card">
+        <div class="ticket-icon">🎫</div>
+        <div class="ticket-title" id="ticketTitle">预约成功</div>
+        <div class="ticket-subtitle" id="ticketSubtitle">南京博物院 · 上午场</div>
+        <div class="ticket-qr" id="ticketQr">
+          <svg viewBox="0 0 100 100">
+            <rect x="10" y="10" width="30" height="30" fill="#2C2416"/>
+            <rect x="15" y="15" width="20" height="20" fill="#fff"/>
+            <rect x="20" y="20" width="10" height="10" fill="#2C2416"/>
+            <rect x="60" y="10" width="30" height="30" fill="#2C2416"/>
+            <rect x="65" y="15" width="20" height="20" fill="#fff"/>
+            <rect x="70" y="20" width="10" height="10" fill="#2C2416"/>
+            <rect x="10" y="60" width="30" height="30" fill="#2C2416"/>
+            <rect x="15" y="65" width="20" height="20" fill="#fff"/>
+            <rect x="20" y="70" width="10" height="10" fill="#2C2416"/>
+            <rect x="50" y="50" width="8" height="8" fill="#2C2416"/>
+            <rect x="65" y="50" width="8" height="8" fill="#2C2416"/>
+            <rect x="80" y="50" width="8" height="8" fill="#2C2416"/>
+            <rect x="50" y="65" width="8" height="8" fill="#2C2416"/>
+            <rect x="65" y="65" width="8" height="8" fill="#2C2416"/>
+            <rect x="80" y="65" width="8" height="8" fill="#2C2416"/>
+            <rect x="50" y="80" width="8" height="8" fill="#2C2416"/>
+            <rect x="65" y="80" width="8" height="8" fill="#2C2416"/>
+            <rect x="80" y="80" width="8" height="8" fill="#2C2416"/>
+          </svg>
+        </div>
+        <div class="ticket-code" id="ticketCode">SH20260711093042</div>
+        <div class="ticket-hint">凭此二维码或身份证原件入馆<br>请提前15分钟到达</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer buttons -->
+  <div class="booking-footer" id="bookingFooter">
+    <button class="booking-btn booking-btn-secondary" id="bookingBtnPrev" onclick="prevStep()">上一步</button>
+    <button class="booking-btn booking-btn-primary" id="bookingBtnNext" onclick="nextStep()">下一步</button>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const museumData = [
+  {
+    name: '南京博物院',
+    desc: '中国三大博物馆之一，馆藏43万件文物，涵盖青铜、瓷器、书画等品类。',
+    tags: ['国家一级', '免费开放', '藏品丰富'],
+    btn1: '预约参观',
+    btn2: '查看地图'
+  },
+  {
+    name: '德基艺术博物馆',
+    desc: '聚焦新媒体数字艺术，以金陵图数字艺术展闻名，沉浸式体验宋代金陵生活。',
+    tags: ['数字艺术', '沉浸体验', '热门推荐'],
+    btn1: '购票入口',
+    btn2: '查看地图'
+  },
+  {
+    name: '六朝博物馆',
+    desc: '中国展示六朝文物最全面的场馆，贝聿铭团队设计，建筑本身就是艺术品。',
+    tags: ['建筑之美', '六朝文物', '贝聿铭设计'],
+    btn1: '预约参观',
+    btn2: '查看地图'
+  },
+  {
+    name: '金陵图特展',
+    desc: '数字化还原宋代金陵城市生活，观众可上传数字小人，在大屏上点亮打卡。',
+    tags: ['数字特展', '互动打卡', '限时展出'],
+    btn1: '立即购票',
+    btn2: '了解更多'
+  },
+  {
+    name: '明城墙遗址',
+    desc: '世界上现存最长的古城墙，登上城墙可俯瞰南京城，感受六百年的历史厚重。',
+    tags: ['世界遗产', '户外打卡', '免费开放'],
+    btn1: '导航前往',
+    btn2: '了解历史'
+  }
+];
+
+// ===== SPLASH =====
+let splashSkipped = false;
+let splashCountdown = 3;
+
+function skipSplash() {
+  if (splashSkipped) return;
+  splashSkipped = true;
+
+  const splash = document.getElementById('splash');
+  splash.classList.add('fade-out');
+
+  setTimeout(() => {
+    splash.style.display = 'none';
+    document.getElementById('app').classList.add('active');
+    initApp();
+  }, 800);
+}
+
+// Countdown timer for skip button
+function startSplashCountdown() {
+  const skipBtn = document.getElementById('skipBtn');
+  if (!skipBtn) return;
+  
+  const interval = setInterval(() => {
+    if (splashSkipped) {
+      clearInterval(interval);
+      return;
+    }
+    splashCountdown--;
+    if (splashCountdown > 0) {
+      skipBtn.textContent = splashCountdown + 's 跳过';
+    } else {
+      clearInterval(interval);
+      skipSplash();
+    }
+  }, 1000);
+}
+
+// Auto-end splash after countdown
+setTimeout(() => {
+  if (!splashSkipped) {
+    skipSplash();
+  }
+}, 3000);
+
+// ===== MAP CANVAS (Simple Sketch Style) =====
+function drawMap() {
+  const canvas = document.getElementById('mapCanvas');
+  const container = document.getElementById('mapContainer');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = container.clientWidth * 2;
+  canvas.height = container.clientHeight * 2;
+  ctx.scale(2, 2);
+
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+
+  // Background
+  ctx.fillStyle = '#F0E8D8';
+  ctx.fillRect(0, 0, w, h);
+
+  // Grid lines (subtle)
+  ctx.strokeStyle = 'rgba(107, 93, 79, 0.06)';
+  ctx.lineWidth = 0.5;
+  for (let x = 0; x < w; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (let y = 0; y < h; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  // Draw simple sketch-style roads
+  ctx.strokeStyle = 'rgba(107, 93, 79, 0.2)';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  // Main road (horizontal)
+  ctx.beginPath();
+  ctx.moveTo(0, h * 0.4);
+  ctx.bezierCurveTo(w * 0.2, h * 0.38, w * 0.35, h * 0.45, w * 0.5, h * 0.35);
+  ctx.bezierCurveTo(w * 0.65, h * 0.25, w * 0.8, h * 0.42, w, h * 0.38);
+  ctx.stroke();
+
+  // Secondary road (vertical)
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.3, 0);
+  ctx.bezierCurveTo(w * 0.28, h * 0.3, w * 0.35, h * 0.5, w * 0.32, h);
+  ctx.stroke();
+
+  // Another road
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.6, 0);
+  ctx.bezierCurveTo(w * 0.65, h * 0.2, w * 0.58, h * 0.6, w * 0.62, h);
+  ctx.stroke();
+
+  // River
+  ctx.strokeStyle = 'rgba(90, 143, 122, 0.15)';
+  ctx.lineWidth = 12;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.7, 0);
+  ctx.bezierCurveTo(w * 0.68, h * 0.3, w * 0.75, h * 0.5, w * 0.72, h * 0.7);
+  ctx.bezierCurveTo(w * 0.7, h * 0.85, w * 0.78, h * 0.9, w * 0.85, h);
+  ctx.stroke();
+
+  // River lighter inner line
+  ctx.strokeStyle = 'rgba(184, 212, 227, 0.25)';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.7, 0);
+  ctx.bezierCurveTo(w * 0.68, h * 0.3, w * 0.75, h * 0.5, w * 0.72, h * 0.7);
+  ctx.bezierCurveTo(w * 0.7, h * 0.85, w * 0.78, h * 0.9, w * 0.85, h);
+  ctx.stroke();
+
+  // Sketch buildings (simple rectangles with roofs)
+  drawSketchBuilding(ctx, w * 0.22, h * 0.25, 20, 16);
+  drawSketchBuilding(ctx, w * 0.45, h * 0.18, 18, 14);
+  drawSketchBuilding(ctx, w * 0.82, h * 0.38, 22, 18);
+  drawSketchBuilding(ctx, w * 0.15, h * 0.55, 14, 12);
+  drawSketchBuilding(ctx, w * 0.5, h * 0.7, 16, 14);
+  drawSketchBuilding(ctx, w * 0.35, h * 0.82, 12, 10);
+  drawSketchBuilding(ctx, w * 0.88, h * 0.15, 14, 11);
+  drawSketchBuilding(ctx, w * 0.6, h * 0.88, 15, 12);
+
+  // Trees (simple circles on sticks)
+  drawSketchTree(ctx, w * 0.12, h * 0.35, 8);
+  drawSketchTree(ctx, w * 0.38, h * 0.48, 7);
+  drawSketchTree(ctx, w * 0.55, h * 0.55, 9);
+  drawSketchTree(ctx, w * 0.75, h * 0.15, 6);
+  drawSketchTree(ctx, w * 0.25, h * 0.75, 7);
+  drawSketchTree(ctx, w * 0.48, h * 0.92, 8);
+
+  // "You are here" indicator
+  const cx = w * 0.42, cy = h * 0.48;
+  ctx.fillStyle = 'rgba(201, 55, 44, 0.12)';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(201, 55, 44, 0.2)';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#C9372C';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawSketchBuilding(ctx, x, y, w, h) {
+  ctx.strokeStyle = 'rgba(107, 93, 79, 0.18)';
+  ctx.lineWidth = 1.2;
+  ctx.fillStyle = 'rgba(107, 93, 79, 0.04)';
+
+  // Building body
+  ctx.beginPath();
+  ctx.rect(x - w/2, y - h/2, w, h);
+  ctx.fill();
+  ctx.stroke();
+
+  // Roof
+  ctx.beginPath();
+  ctx.moveTo(x - w/2 - 3, y - h/2);
+  ctx.lineTo(x, y - h/2 - 6);
+  ctx.lineTo(x + w/2 + 3, y - h/2);
+  ctx.stroke();
+
+  // Windows
+  ctx.fillStyle = 'rgba(107, 93, 79, 0.1)';
+  ctx.fillRect(x - 3, y - 3, 3, 3);
+  ctx.fillRect(x + 1, y - 3, 3, 3);
+}
+
+function drawSketchTree(ctx, x, y, r) {
+  ctx.strokeStyle = 'rgba(90, 143, 122, 0.25)';
+  ctx.lineWidth = 1.5;
+  ctx.fillStyle = 'rgba(90, 143, 122, 0.08)';
+
+  // Trunk
+  ctx.beginPath();
+  ctx.moveTo(x, y + r);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+
+  // Canopy
+  ctx.beginPath();
+  ctx.arc(x, y - 2, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+}
+
+// ===== MUSEUM POPUP =====
+function showMuseumPopup(index, el) {
+  el.classList.add('bounce');
+  setTimeout(() => el.classList.remove('bounce'), 500);
+
+  const data = museumData[index];
+  document.getElementById('popupName').textContent = data.name;
+  document.getElementById('popupDesc').textContent = data.desc;
+  const btn1 = document.getElementById('popupBtn1');
+  btn1.textContent = data.btn1;
+  btn1.onclick = () => openBooking(index);
+  document.getElementById('popupBtn2').textContent = data.btn2;
+
+  const tagsEl = document.getElementById('popupTags');
+  tagsEl.innerHTML = data.tags.map(t => `<span class="popup-tag">${t}</span>`).join('');
+
+  document.getElementById('museumPopup').classList.add('show');
+}
+
+function closePopup() {
+  document.getElementById('museumPopup').classList.remove('show');
+}
+
+// ===== NAVIGATION =====
+function switchTab(el, tab) {
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===== FLOATING LANTERNS =====
+function spawnLantern() {
+  const container = document.getElementById('lanterns');
+  if (!container) return;
+  const lantern = document.createElement('div');
+  lantern.className = 'lantern';
+  lantern.textContent = ['🏮', '🏮', '🏮', '✨', '🏮'][Math.floor(Math.random() * 5)];
+  lantern.style.left = (Math.random() * 90 + 5) + '%';
+  lantern.style.bottom = '-30px';
+  lantern.style.fontSize = (14 + Math.random() * 12) + 'px';
+  const duration = 6 + Math.random() * 8;
+  lantern.style.animationDuration = duration + 's';
+  container.appendChild(lantern);
+  setTimeout(() => lantern.remove(), duration * 1000);
+}
+
+// ===== INIT APP =====
+function initApp() {
+  drawMap();
+  renderExhibitions();
+
+  // Animate progress bar
+  setTimeout(() => {
+    document.getElementById('progressFill').style.width = '60%';
+  }, 300);
+
+  // Spawn lanterns periodically
+  setInterval(spawnLantern, 4000);
+  setTimeout(spawnLantern, 1000);
+}
+
+// ===== PLACEHOLDER ACTIONS =====
+function showNotifications() { alert('🔔 通知功能开发中...\n\n nearby: "宋时金陵"展览即将截止预约'); }
+function showProfile() { alert('👤 个人中心开发中...\n\n收藏进度: 3/128'); }
+
+// ===== EXHIBITION DATA =====
+const exhibitionData = [
+  {
+    name: '涌自大地，借景成身',
+    venue: '南京金鹰美术馆',
+    date: '2026.7.3 - 10.13',
+    price: '19-69元',
+    priceType: 'paid',
+    badge: '新展',
+    badgeType: 'jade',
+    cover: 'assets/exh_yongzidadi.jpg',
+    desc: '以大地为灵感源泉，探索自然材质与当代艺术的对话关系，借景成身，呈现一场沉浸式空间体验。'
+  },
+  {
+    name: '陈维：雾中排演',
+    venue: '南京金鹰美术馆',
+    date: '2026.3.19 - 9.20',
+    price: '79.9元起',
+    priceType: 'paid',
+    badge: '热展',
+    badgeType: 'red',
+    cover: 'assets/exh_chenwei.jpg',
+    desc: '艺术家陈维以摄影与装置构建雾中剧场，在模糊与清晰之间探讨当代生活的不确定性与剧场感。'
+  },
+  {
+    name: '走向户外',
+    venue: '遇见博物馆·南京馆',
+    date: '2026.3.26 - 8.30',
+    price: '89元起',
+    priceType: 'paid',
+    badge: '热展',
+    badgeType: 'red',
+    cover: 'assets/exh_zouxianghuwai.jpg',
+    desc: '从印象派到当代艺术，展览呈现艺术家们如何走出画室、走向自然，捕捉光影与户外生活的瞬间。'
+  },
+  {
+    name: '郁郁乎唐',
+    venue: '六朝博物馆特展厅',
+    date: '2026.5.18 - 9.1',
+    price: '30元',
+    priceType: 'paid',
+    badge: '热展',
+    badgeType: 'red',
+    cover: 'assets/exh_yuyuhu_tang.jpg',
+    desc: '以唐代文物与艺术品为主线，展现盛唐气象与文化风貌，带你穿越回那个"郁郁乎文哉"的黄金时代。'
+  },
+  {
+    name: '咫尺千里——陆俨少手卷特展',
+    venue: '江苏省美术馆陈列馆',
+    date: '2026.5.1 - 8.2',
+    price: '免费',
+    priceType: 'free',
+    badge: '免费',
+    badgeType: 'free',
+    cover: 'assets/exh_zhichiqianli.jpg',
+    desc: '陆俨少先生手卷、册页、扇面精品集中展出，方寸之间展现千里江山之气象，领略山水大师的笔墨境界。'
+  }
+];
+
+const freeExhibitionData = [
+  { name: '朝露——乐晓菊个展', venue: '江苏省美术馆8号展厅', date: '2026.6.14 - 7.10' },
+  { name: '苒苒：张华清油画艺术回顾展', venue: '江苏省美术馆', date: '2026.6.9 - 7.19' },
+  { name: '花间逐影——沉浸式艺术体验空间', venue: '江苏省美术馆陈列馆', date: '2026.2.10起' },
+  { name: '江苏水印木刻实践与研究特展', venue: '江苏省美术馆负一层', date: '2026.2.10 - 8.31' },
+  { name: '江苏省美术馆典藏精品陈列', venue: '江苏省美术馆陈列馆', date: '常设展' }
+];
+
+function renderExhibitions() {
+  // Featured exhibitions (horizontal scroll cards)
+  const scrollEl = document.getElementById('exhibitionScroll');
+  scrollEl.innerHTML = exhibitionData.map(ex => `
+    <div class="exhibition-card" onclick="openExhibitionDetail(${exhibitionData.indexOf(ex)})">
+      <img class="exhibition-cover" src="${ex.cover}" alt="${ex.name}" />
+      <div class="exhibition-info">
+        <div class="exhibition-title">${ex.name}</div>
+        <div class="exhibition-date">📅 ${ex.date}</div>
+        <div class="exhibition-venue">🏛️ ${ex.venue}</div>
+        <div class="exhibition-meta">
+          <span class="exhibition-badge ${ex.badgeType === 'jade' ? 'jade' : ex.badgeType === 'free' ? 'free' : ''}">${ex.badge}</span>
+          <span class="exhibition-price ${ex.priceType === 'free' ? 'free' : ''}">${ex.price}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Free exhibition list (compact)
+  const listEl = document.getElementById('freeExhibitionList');
+  listEl.innerHTML = freeExhibitionData.map(ex => `
+    <div class="free-exhibition-item" onclick="showToast('📍 ${ex.venue}\\n📅 ${ex.date}')">
+      <div class="free-exhibition-info">
+        <div class="free-exhibition-name">${ex.name}</div>
+        <div class="free-exhibition-meta">${ex.venue} · ${ex.date}</div>
+      </div>
+      <div class="free-exhibition-tag">免费</div>
+    </div>
+  `).join('');
+}
+
+function openExhibitionDetail(i) {
+  const ex = exhibitionData[i];
+  if (!ex) return;
+
+  const modal = document.createElement('div');
+  modal.className = 'artifact-modal';
+  modal.innerHTML = `
+    <div class="artifact-modal-overlay" onclick="this.parentElement.remove()"></div>
+    <div class="artifact-modal-content">
+      <button class="artifact-modal-close" onclick="this.closest('.artifact-modal').remove()">✕</button>
+      <div class="artifact-modal-img-wrapper">
+        <img src="${ex.cover}" alt="${ex.name}" />
+      </div>
+      <div class="artifact-modal-info">
+        <div class="artifact-modal-tag">${ex.badge} · ${ex.price}</div>
+        <h3 class="artifact-modal-name">${ex.name}</h3>
+        <div class="artifact-modal-era">📅 ${ex.date} | 🏛️ ${ex.venue}</div>
+        <p class="artifact-modal-story">${ex.desc}</p>
+        <div class="artifact-modal-action">
+          <button onclick="showToast('🎫 即将跳转官方购票页面')">🎫 购票/预约</button>
+          <button onclick="showToast('📍 已添加到行程规划')">📍 加入行程</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+const artifactData = [
+  { name: '东汉铜牛灯', era: '东汉', tag: '汉代黑科技文创', story: '工匠以牛身为储烟腔体，灯火产生的烟尘顺着牛角管道溶入牛腹清水，在千年前就实现了排烟减霾的环保设计。', img: 'assets/niudeng_color.png' },
+  { name: '乾隆芙蓉石蟠螭纹耳盖炉', era: '清代·乾隆', tag: '清代宫廷玉石香具', story: '宫廷玉雕匠人顺着天然粉晶肌理镂空雕琢螭龙构件，这件精致香炉曾在皇家居室盛放香品，烘托雅致的焚香氛围。', img: 'assets/panchilu_color.png' },
+  { name: '青釉神兽尊', era: '西晋', tag: '西晋青瓷', story: '古人为墓葬烧制样貌威猛的神兽形陶罐，依靠神兽威严的外形，祈愿它镇守墓穴、庇佑墓主人死后安宁。', img: 'assets/shenshouzun_color.png' },
+  { name: '四合如意云纹金盘', era: '元代', tag: '贵族宴饮用具', story: '金匠以精密錾花工艺在盘面刻满缠枝花卉与四合如意纹，这件华贵金盘是元代江南上层贵族设宴盛放果品的贵重器具。', img: 'assets/jinpan_color.png', locked: true },
+  { name: '吉州窑白釉褐彩梅瓶', era: '南宋', tag: '宋代民窑瓷器', story: '匠人以褐彩在白瓷面手绘连绵卷草，流转的纹样寄托宋人期盼生生不息、福寿绵延的朴素心愿。', img: 'assets/meiping_color.png', locked: true }
+];
+
+function openArtifact(i) {
+  const data = artifactData[i];
+  if (!data) return;
+  if (data.locked) {
+    showToast(`🔒 ${data.name} 尚未解锁\n到南京博物院现场打卡即可点亮`);
+    return;
+  }
+  // Show styled artifact detail modal
+  const modal = document.createElement('div');
+  modal.className = 'artifact-modal';
+  modal.innerHTML = `
+    <div class="artifact-modal-overlay" onclick="this.parentElement.remove()"></div>
+    <div class="artifact-modal-content">
+      <button class="artifact-modal-close" onclick="this.closest('.artifact-modal').remove()">✕</button>
+      <div class="artifact-modal-img-wrapper">
+        <img src="${data.img}" alt="${data.name}" />
+        <div class="artifact-modal-seal"></div>
+      </div>
+      <div class="artifact-modal-info">
+        <div class="artifact-modal-tag">${data.tag}</div>
+        <h3 class="artifact-modal-name">${data.name}</h3>
+        <div class="artifact-modal-era">${data.era}</div>
+        <p class="artifact-modal-story">${data.story}</p>
+        <div class="artifact-modal-action">
+          <button onclick="showToast('🏮 已收藏至个人图鉴')">📖 收入图鉴</button>
+          <button onclick="showToast('📤 分享功能开发中')">📤 分享</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+function openCollection() { alert('📖 收藏图鉴开发中...\n\n将展示完整的画卷收藏册'); }
+
+// ===== CITY DATA =====
+const cityData = {
+  '南京': {
+    museums: [
+      { name: '南京博物院', icon: '🏛️', desc: '中国三大博物馆之一，藏品丰富', tags: ['综合性','国家级'] },
+      { name: '六朝博物馆', icon: '🏯', desc: '展示六朝历史文化的专题博物馆', tags: ['历史','六朝'] },
+      { name: '中国科举博物馆', icon: '📜', desc: '中国古代科举制度专题博物馆', tags: ['科举','文化'] }
+    ],
+    exhibitions: [
+      { name: '郁郁乎唐', venue: '六朝博物馆', date: '2026.5.18-9.1', price: '30元' },
+      { name: '涌自大地，借景成身', venue: '金鹰美术馆', date: '2026.7.3-10.13', price: '19-69元' },
+      { name: '陈维：雾中排演', venue: '金鹰美术馆', date: '2026.3.19-9.20', price: '79.9元起' }
+    ]
+  },
+  '北京': {
+    museums: [
+      { name: '故宫博物院', icon: '🏯', desc: '世界最大的古代宫殿建筑群', tags: ['宫殿','皇家'] },
+      { name: '国家博物馆', icon: '🏛️', desc: '世界上单体建筑面积最大的博物馆', tags: ['综合性','国家级'] },
+      { name: '首都博物馆', icon: '🏛️', desc: '北京地区大型综合性博物馆', tags: ['综合','历史'] }
+    ],
+    exhibitions: [
+      { name: '千里江山——历代青绿山水特展', venue: '故宫博物院', date: '2026.6.1-10.31', price: '60元' },
+      { name: '华夏之光——中华文明探源', venue: '国家博物馆', date: '2026.4.15-12.31', price: '免费' }
+    ]
+  },
+  '上海': {
+    museums: [
+      { name: '上海博物馆', icon: '🏛️', desc: '中国古代艺术博物馆，文物四大系列', tags: ['艺术','古代'] },
+      { name: '中华艺术宫', icon: '🎨', desc: '近现代美术殿堂', tags: ['美术','近现代'] },
+      { name: '上海科技馆', icon: '🔬', desc: '综合性自然科学博物馆', tags: ['科技','互动'] }
+    ],
+    exhibitions: [
+      { name: '对话达芬奇——文艺复兴特展', venue: '上海博物馆', date: '2026.5.1-8.31', price: '100元' },
+      { name: '东方明珠数字艺术展', venue: '中华艺术宫', date: '2026.3.1-7.31', price: '免费' }
+    ]
+  },
+  '广州': {
+    museums: [
+      { name: '广东省博物馆', icon: '🏛️', desc: '广东省综合性地志博物馆', tags: ['综合','岭南'] },
+      { name: '广州博物馆', icon: '🏛️', desc: '广州城市标志性博物馆', tags: ['城市','历史'] }
+    ],
+    exhibitions: [
+      { name: '海贸明珠——海上丝绸之路特展', venue: '广东省博物馆', date: '2026.4.20-9.15', price: '免费' }
+    ]
+  },
+  '深圳': {
+    museums: [
+      { name: '深圳博物馆', icon: '🏛️', desc: '深圳历史与改革开放展示', tags: ['历史','改革开放'] },
+      { name: '南山博物馆', icon: '🏛️', desc: '南山区综合博物馆', tags: ['综合','当代'] },
+      { name: '海上世界文化艺术中心', icon: '🎨', desc: '以设计创意为主题的文化艺术中心', tags: ['设计','艺术'] }
+    ],
+    exhibitions: [
+      { name: '设计的力量——国际当代设计展', venue: '海上世界文化艺术中心', date: '2026.3.15-8.30', price: '80元' }
+    ]
+  },
+  '西安': {
+    museums: [
+      { name: '陕西历史博物馆', icon: '🏛️', desc: '华夏宝库，周秦汉唐文物集萃', tags: ['历史','国家级'] },
+      { name: '秦始皇帝陵博物院', icon: '🗿', desc: '世界第八大奇迹兵马俑', tags: ['遗址','世界遗产'] },
+      { name: '西安博物院', icon: '🏯', desc: '集博物馆、名胜古迹、城市园林为一体', tags: ['综合','古建'] }
+    ],
+    exhibitions: [
+      { name: '大唐遗宝——何家村窖藏出土文物展', venue: '陕西历史博物馆', date: '常设展', price: '免费' },
+      { name: '丝绸之路起点展', venue: '秦始皇帝陵博物院', date: '常设展', price: '120元' }
+    ]
+  },
+  '成都': {
+    museums: [
+      { name: '成都博物馆', icon: '🏛️', desc: '成都市属综合性博物馆', tags: ['综合','天府'] },
+      { name: '金沙遗址博物馆', icon: '☀️', desc: '古蜀文明遗址类博物馆', tags: ['遗址','古蜀'] },
+      { name: '四川博物院', icon: '🏛️', desc: '四川省最大的综合性博物馆', tags: ['综合','省级'] }
+    ],
+    exhibitions: [
+      { name: '金沙之谜——古蜀文明探秘', venue: '金沙遗址博物馆', date: '常设展', price: '70元' }
+    ]
+  },
+  '杭州': {
+    museums: [
+      { name: '浙江省博物馆', icon: '🏛️', desc: '浙江省最大的综合性博物馆', tags: ['综合','省级'] },
+      { name: '中国丝绸博物馆', icon: '🧵', desc: '世界上最大的丝绸专题博物馆', tags: ['丝绸','专题'] },
+      { name: '良渚博物院', icon: '🏺', desc: '良渚文化专题考古遗址博物馆', tags: ['遗址','世界遗产'] }
+    ],
+    exhibitions: [
+      { name: '良渚古城——五千年文明之光', venue: '良渚博物院', date: '常设展', price: '免费' }
+    ]
+  },
+  '苏州': {
+    museums: [
+      { name: '苏州博物馆', icon: '🏛️', desc: '贝聿铭设计，建筑即展品', tags: ['建筑','艺术'] },
+      { name: '吴文化博物馆', icon: '🏯', desc: '吴地文化专题博物馆', tags: ['吴文化','历史'] },
+      { name: '中国昆曲博物馆', icon: '🎭', desc: '全国唯一的昆曲专业博物馆', tags: ['昆曲','非遗'] }
+    ],
+    exhibitions: [
+      { name: '吴门画派——明代书画特展', venue: '苏州博物馆', date: '2026.6.1-9.30', price: '免费' }
+    ]
+  },
+  '武汉': {
+    museums: [
+      { name: '湖北省博物馆', icon: '🏛️', desc: '曾侯乙编钟、越王勾践剑等国宝', tags: ['国家级','楚国'] },
+      { name: '武汉博物馆', icon: '🏛️', desc: '武汉市属综合性博物馆', tags: ['综合','城市'] },
+      { name: '辛亥革命博物院', icon: '🏛️', desc: '辛亥革命武昌起义纪念馆', tags: ['革命','历史'] }
+    ],
+    exhibitions: [
+      { name: '曾侯乙——编钟与礼乐文明', venue: '湖北省博物馆', date: '常设展', price: '免费' }
+    ]
+  }
+};
+
+let currentCity = '南京';
+let searchTab = 'all';
+
+// ===== CITY SELECTOR =====
+function toggleCityDropdown() {
+  const dd = document.getElementById('cityDropdown');
+  dd.classList.toggle('show');
+  if (dd.classList.contains('show')) {
+    renderCityDropdown();
+  }
+}
+
+function renderCityDropdown() {
+  const tagsEl = document.getElementById('cityTags');
+  tagsEl.innerHTML = Object.keys(cityData).map(city =>
+    `<div class="city-tag ${city === currentCity ? 'active' : ''}" onclick="event.stopPropagation(); selectCity('${city}')">${city}</div>`
+  ).join('');
+  renderCityMuseums();
+}
+
+function renderCityMuseums() {
+  const listEl = document.getElementById('cityMuseumList');
+  const museums = cityData[currentCity]?.museums || [];
+  listEl.innerHTML = museums.map(m =>
+    `<div class="city-museum-item" onclick="event.stopPropagation(); selectMuseum('${m.name}')">
+      <div class="city-museum-icon">${m.icon}</div>
+      <div class="city-museum-info">
+        <div class="city-museum-name">${m.name}</div>
+        <div class="city-museum-desc">${m.desc}</div>
+      </div>
+      <div class="city-museum-arrow">›</div>
+    </div>`
+  ).join('');
+}
+
+function selectCity(city) {
+  currentCity = city;
+  document.getElementById('currentCityName').textContent = city;
+  renderCityDropdown();
+  updateExhibitionsForCity(city);
+  showToast(`📍 已切换到${city}`);
+  setTimeout(() => {
+    document.getElementById('cityDropdown').classList.remove('show');
+  }, 300);
+}
+
+function selectMuseum(name) {
+  document.getElementById('cityDropdown').classList.remove('show');
+  const searchInput = document.querySelector('.search-input');
+  searchInput.value = name;
+  handleSearch(name);
+}
+
+function updateExhibitionsForCity(city) {
+  const data = cityData[city];
+  if (!data) return;
+
+  // Update featured exhibitions
+  const scrollEl = document.getElementById('exhibitionScroll');
+  if (data.exhibitions.length > 0) {
+    const exhCards = data.exhibitions.map((ex, i) => `
+      <div class="exhibition-card" onclick="showToast('🎫 ${ex.name}\\n${ex.venue} · ${ex.date}\\n${ex.price}')">
+        <div style="width:100%;height:120px;background:linear-gradient(135deg,rgba(201,55,44,0.15),rgba(201,169,97,0.15));display:flex;align-items:center;justify-content:center;font-size:32px;">🎭</div>
+        <div class="exhibition-info">
+          <div class="exhibition-title">${ex.name}</div>
+          <div class="exhibition-date">📅 ${ex.date}</div>
+          <div class="exhibition-venue">🏛️ ${ex.venue}</div>
+          <div class="exhibition-meta">
+            <span class="exhibition-badge">在展</span>
+            <span class="exhibition-price ${ex.price === '免费' ? 'free' : ''}">${ex.price}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    scrollEl.innerHTML = exhCards;
+  } else {
+    scrollEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--ink-muted);font-size:13px;">暂无该城市展览信息</div>';
+  }
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('citySelectorWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('cityDropdown').classList.remove('show');
+  }
+});
+
+// ===== SEARCH =====
+function handleSearch(value) {
+  const clearBtn = document.getElementById('searchClear');
+  clearBtn.classList.toggle('show', value.length > 0);
+  const tabsEl = document.getElementById('searchTabs');
+  const resultsEl = document.getElementById('searchResults');
+
+  if (!value.trim()) {
+    tabsEl.classList.remove('show');
+    resultsEl.classList.remove('show');
+    resultsEl.innerHTML = '';
+    return;
+  }
+
+  tabsEl.classList.add('show');
+  resultsEl.classList.add('show');
+
+  let results = [];
+
+  if (searchTab === 'all' || searchTab === 'museum') {
+    Object.entries(cityData).forEach(([city, data]) => {
+      data.museums.forEach(m => {
+        if (m.name.includes(value) || m.desc.includes(value) || m.tags.some(t => t.includes(value))) {
+          results.push({ type: 'museum', icon: m.icon, name: m.name, meta: `${city} · ${m.tags.join(' / ')}`, tag: '博物馆' });
+        }
+      });
+    });
+  }
+
+  if (searchTab === 'all' || searchTab === 'exhibition') {
+    Object.entries(cityData).forEach(([city, data]) => {
+      data.exhibitions.forEach(ex => {
+        if (ex.name.includes(value) || ex.venue.includes(value)) {
+          results.push({ type: 'exhibition', icon: '🎭', name: ex.name, meta: `${city} · ${ex.venue} · ${ex.date}`, tag: '展览' });
+        }
+      });
+    });
+  }
+
+  if (searchTab === 'all' || searchTab === 'artifact') {
+    artifactData.forEach(a => {
+      if (a.name.includes(value) || a.tag.includes(value) || a.era.includes(value)) {
+        results.push({ type: 'artifact', icon: '🏺', name: a.name, meta: `${a.era} · ${a.tag}`, tag: '文物' });
+      }
+    });
+  }
+
+  if (results.length === 0) {
+    resultsEl.innerHTML = '<div class="search-empty">未找到相关结果</div>';
+  } else {
+    resultsEl.innerHTML = results.map(r => `
+      <div class="search-result-item" onclick="onSearchResultClick('${r.type}', '${r.name.replace(/'/g, "\\'")}')">
+        <div class="search-result-icon">${r.icon}</div>
+        <div class="search-result-info">
+          <div class="search-result-name">${r.name}</div>
+          <div class="search-result-meta">${r.meta}</div>
+        </div>
+        <div class="search-result-tag">${r.tag}</div>
+      </div>
+    `).join('');
+  }
+}
+
+function clearSearch() {
+  const searchInput = document.querySelector('.search-input');
+  searchInput.value = '';
+  document.getElementById('searchTabs').classList.remove('show');
+  document.getElementById('searchResults').classList.remove('show');
+  document.getElementById('searchResults').innerHTML = '';
+  searchInput.focus();
+}
+
+function switchSearchTab(el, tab) {
+  searchTab = tab;
+  document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const searchInput = document.querySelector('.search-input');
+  handleSearch(searchInput.value);
+}
+
+function onSearchResultClick(type, name) {
+  if (type === 'museum') {
+    showToast(`🏛️ ${name}\\n即将跳转博物馆详情`);
+  } else if (type === 'exhibition') {
+    showToast(`🎭 ${name}\\n即将跳转展览详情`);
+  } else if (type === 'artifact') {
+    const idx = artifactData.findIndex(a => a.name === name);
+    if (idx >= 0) openArtifact(idx);
+  }
+}
+
+// ===== LOCATE =====
+let locateAnimationId = null;
+function locateUser() {
+  const btn = document.querySelector('.locate-btn');
+  btn.classList.add('pulse');
+  setTimeout(() => btn.classList.remove('pulse'), 600);
+
+  // Redraw the "You are here" indicator with animation
+  const canvas = document.getElementById('mapCanvas');
+  const container = document.getElementById('mapContainer');
+  const ctx = canvas.getContext('2d');
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  const cx = w * 0.42;
+  const cy = h * 0.48;
+
+  // Cancel previous animation
+  if (locateAnimationId) cancelAnimationFrame(locateAnimationId);
+
+  let frame = 0;
+  function animate() {
+    frame++;
+    // Redraw map background area around indicator
+    ctx.fillStyle = '#F0E8D8';
+    ctx.fillRect(cx - 30, cy - 30, 60, 60);
+
+    // Redraw nearby roads/buildings (simplified)
+    ctx.strokeStyle = 'rgba(107, 93, 79, 0.2)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, h * 0.4);
+    ctx.bezierCurveTo(w * 0.2, h * 0.38, w * 0.35, h * 0.45, w * 0.5, h * 0.35);
+    ctx.stroke();
+
+    // Animated ripple
+    const maxRadius = 25;
+    const radius = (frame * 1.5) % maxRadius;
+    const opacity = 1 - (radius / maxRadius);
+
+    ctx.fillStyle = `rgba(201, 55, 44, ${0.15 * opacity})`;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(201, 55, 44, 0.2)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#C9372C';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (frame < 80) {
+      locateAnimationId = requestAnimationFrame(animate);
+    }
+  }
+  animate();
+
+  // Show toast-like notification
+  showToast('📍 已定位到当前位置');
+}
+
+// ===== BOOKING =====
+let bookingStep = 1;
+let bookingMuseumIdx = 0;
+let selectedDate = null;
+let selectedTimeSlot = null;
+let visitorCount = 1;
+
+function openBooking(index) {
+  bookingMuseumIdx = index;
+  const data = museumData[index];
+  document.getElementById('bookingMuseumName').textContent = data.name;
+  document.getElementById('summaryMuseum').textContent = data.name;
+  resetBooking();
+  document.getElementById('bookingModal').classList.add('show');
+  // Close museum popup if open
+  closePopup();
+}
+
+function closeBooking() {
+  document.getElementById('bookingModal').classList.remove('show');
+  setTimeout(() => resetBooking(), 300);
+}
+
+function resetBooking() {
+  bookingStep = 1;
+  selectedDate = null;
+  selectedTimeSlot = null;
+  visitorCount = 1;
+  document.getElementById('visitorCount').textContent = '1';
+  document.querySelectorAll('.date-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+  updateStepUI();
+  showBookingStep(1);
+  updateFooterButtons();
+  renderDates();
+  updateSummary();
+}
+
+function renderDates() {
+  const container = document.getElementById('dateScroll');
+  container.innerHTML = '';
+  const today = new Date();
+  const weekDays = ['周日','周一','周二','周三','周四','周五','周六'];
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const isToday = i === 0;
+    const dayName = isToday ? '今天' : weekDays[d.getDay()];
+    const dayNum = d.getDate();
+    const month = d.getMonth() + 1;
+    const dateStr = `${d.getFullYear()}-${String(month).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
+
+    const card = document.createElement('div');
+    card.className = 'date-card' + (isToday ? ' today' : '');
+    card.dataset.date = dateStr;
+    card.innerHTML = `
+      <div class="day-name">${dayName}</div>
+      <div class="day-num">${dayNum}</div>
+      <div class="day-mon">${month}月</div>
+    `;
+    card.onclick = () => selectDate(card, dateStr);
+    container.appendChild(card);
+  }
+}
+
+function selectDate(card, dateStr) {
+  document.querySelectorAll('.date-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedDate = dateStr;
+  updateSummary();
+}
+
+function selectTime(slot) {
+  selectedTimeSlot = slot;
+  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+  document.getElementById(slot === 'am' ? 'timeSlot1' : 'timeSlot2').classList.add('selected');
+  updateSummary();
+}
+
+function changeVisitor(delta) {
+  visitorCount = Math.max(1, Math.min(5, visitorCount + delta));
+  document.getElementById('visitorCount').textContent = visitorCount;
+  document.getElementById('visitorMinus').disabled = visitorCount <= 1;
+  document.getElementById('visitorPlus').disabled = visitorCount >= 5;
+  updateSummary();
+}
+
+function updateSummary() {
+  document.getElementById('summaryDate').textContent = selectedDate || '-';
+  document.getElementById('summaryTime').textContent = selectedTimeSlot === 'am' ? '上午场 (09:00-12:00)' : selectedTimeSlot === 'pm' ? '下午场 (12:00-17:00)' : '-';
+  document.getElementById('summaryVisitors').textContent = visitorCount + '人';
+}
+
+function showBookingStep(step) {
+  document.querySelectorAll('.booking-step').forEach((el, idx) => {
+    el.classList.toggle('active', idx + 1 === step);
+  });
+}
+
+function updateStepUI() {
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('stepDot' + i);
+    const line = document.getElementById('stepLine' + i);
+    dot.classList.remove('active', 'done');
+    if (line) line.classList.remove('done');
+    if (i < bookingStep) {
+      dot.classList.add('done');
+      if (line) line.classList.add('done');
+    } else if (i === bookingStep) {
+      dot.classList.add('active');
+    }
+  }
+}
+
+function updateFooterButtons() {
+  const prevBtn = document.getElementById('bookingBtnPrev');
+  const nextBtn = document.getElementById('bookingBtnNext');
+
+  prevBtn.style.display = bookingStep === 1 ? 'none' : 'block';
+
+  if (bookingStep === 4) {
+    nextBtn.textContent = '完成';
+    nextBtn.onclick = closeBooking;
+  } else if (bookingStep === 3) {
+    nextBtn.textContent = '确认预约';
+    nextBtn.onclick = submitBooking;
+  } else {
+    nextBtn.textContent = '下一步';
+    nextBtn.onclick = nextStep;
+  }
+}
+
+function nextStep() {
+  if (bookingStep === 1 && !selectedDate) {
+    showToast('请先选择参观日期');
+    return;
+  }
+  if (bookingStep === 2 && !selectedTimeSlot) {
+    showToast('请选择入馆时段');
+    return;
+  }
+  if (bookingStep < 4) {
+    bookingStep++;
+    showBookingStep(bookingStep);
+    updateStepUI();
+    updateFooterButtons();
+  }
+}
+
+function prevStep() {
+  if (bookingStep > 1) {
+    bookingStep--;
+    showBookingStep(bookingStep);
+    updateStepUI();
+    updateFooterButtons();
+  }
+}
+
+function submitBooking() {
+  // Generate ticket info
+  const data = museumData[bookingMuseumIdx];
+  const timeLabel = selectedTimeSlot === 'am' ? '上午场' : '下午场';
+  document.getElementById('ticketTitle').textContent = '预约成功';
+  document.getElementById('ticketSubtitle').textContent = `${data.name} · ${timeLabel}`;
+  document.getElementById('ticketCode').textContent = generateTicketCode();
+
+  bookingStep = 4;
+  showBookingStep(4);
+  updateStepUI();
+  updateFooterButtons();
+  showToast('🎉 预约成功！请保存电子票');
+}
+
+function generateTicketCode() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  return 'SH' + now.getFullYear() + pad(now.getMonth()+1) + pad(now.getDate()) + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+}
+
+// ===== TOAST =====
+function showToast(message) {
+  const existing = document.querySelector('.toast-msg');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-msg';
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+    background: rgba(44, 36, 22, 0.85); color: #fff;
+    padding: 10px 20px; border-radius: 20px;
+    font-size: 13px; z-index: 1000;
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2s forwards;
+    backdrop-filter: blur(6px);
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+</script>
+
+<style>
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  @keyframes toastOut {
+    from { opacity: 1; transform: translateX(-50%) translateY(0); }
+    to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  }
+</style>
+
+</body>
+</html>
