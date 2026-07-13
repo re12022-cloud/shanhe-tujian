@@ -1058,6 +1058,284 @@
       margin-right: 4px;
     }
 
+    /* ===== CREATIVE STORE ===== */
+    .creative-section { padding: 0 16px 16px; }
+    .creative-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .creative-card {
+      background: linear-gradient(160deg, var(--paper-dark), var(--paper));
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--gold-light);
+      box-shadow: 0 2px 10px rgba(168,152,130,0.08);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .creative-card:active { transform: scale(0.97); }
+    .creative-card-img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      background: linear-gradient(135deg, rgba(201,55,44,0.08), rgba(201,169,97,0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+    .creative-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .creative-card-body { padding: 10px; }
+    .creative-card-tag {
+      display: inline-block;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: var(--cinnabar);
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .creative-card-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+    .creative-card-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .creative-card-price-now {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--cinnabar);
+    }
+    .creative-card-price-old {
+      font-size: 11px;
+      color: var(--ink-muted);
+      text-decoration: line-through;
+    }
+    .creative-card-meta {
+      font-size: 10px;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+
+    /* ===== CREATIVE MODAL ===== */
+    .creative-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .creative-modal.show { display: flex; }
+    .creative-modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(44,36,22,0.5);
+      backdrop-filter: blur(4px);
+    }
+    .creative-modal-content {
+      position: relative;
+      width: 100%;
+      max-width: 430px;
+      max-height: 85vh;
+      background: var(--paper);
+      border-radius: 20px 20px 0 0;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+      padding-bottom: 20px;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .creative-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--gold-light);
+      position: sticky;
+      top: 0;
+      background: var(--paper);
+      z-index: 2;
+    }
+    .creative-modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .creative-modal-close {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(201,169,97,0.12);
+      color: var(--ink-light);
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .creative-detail-img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      background: linear-gradient(135deg, rgba(201,55,44,0.08), rgba(201,169,97,0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+    }
+    .creative-detail-body { padding: 16px; }
+    .creative-detail-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      background: var(--cinnabar);
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .creative-detail-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .creative-detail-museum {
+      font-size: 13px;
+      color: var(--ink-light);
+      margin-bottom: 12px;
+    }
+    .creative-detail-price {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .creative-detail-price-now {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--cinnabar);
+    }
+    .creative-detail-price-old {
+      font-size: 14px;
+      color: var(--ink-muted);
+      text-decoration: line-through;
+    }
+    .creative-detail-desc {
+      font-size: 13px;
+      color: var(--ink-light);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .creative-detail-action {
+      display: flex;
+      gap: 10px;
+      padding: 0 16px 10px;
+    }
+    .creative-detail-action button {
+      flex: 1;
+      padding: 12px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .creative-detail-action button:first-child {
+      background: linear-gradient(135deg, var(--gold-light), var(--paper-dark));
+      color: var(--ink);
+      border: 1px solid var(--gold);
+    }
+    .creative-detail-action button:last-child {
+      background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-light));
+      color: #fff;
+    }
+    .creative-detail-action button:active { transform: scale(0.97); }
+
+    /* ===== CART BADGE ===== */
+    .cart-badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      min-width: 16px; height: 16px;
+      border-radius: 8px;
+      background: var(--cinnabar);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    /* ===== ORDER LIST ===== */
+    .order-card {
+      background: linear-gradient(160deg, var(--paper-dark), var(--paper));
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid var(--gold-light);
+      margin-bottom: 10px;
+    }
+    .order-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(201,169,97,0.15);
+    }
+    .order-id { font-size: 12px; color: var(--ink-muted); }
+    .order-status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(90,143,122,0.12);
+      color: var(--jade);
+    }
+    .order-status.pending {
+      background: rgba(201,55,44,0.1);
+      color: var(--cinnabar);
+    }
+    .order-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .order-item-img {
+      width: 48px; height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: linear-gradient(135deg, rgba(201,55,44,0.08), rgba(201,169,97,0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .order-item-info { flex: 1; }
+    .order-item-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .order-item-meta { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+    .order-item-price { font-size: 13px; font-weight: 700; color: var(--cinnabar); }
+    .order-total {
+      text-align: right;
+      font-size: 13px;
+      color: var(--ink-light);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(201,169,97,0.15);
+    }
+    .order-total span { color: var(--cinnabar); font-weight: 700; }
+
     /* ===== MAP CARD (compact) ===== */
     .map-card {
       margin: 0 16px 16px;
@@ -2009,9 +2287,9 @@
       <div class="quick-icon-wrap">📜</div>
       <div class="quick-label">文物图鉴</div>
     </div>
-    <div class="quick-item" onclick="switchToTab('profile')">
-      <div class="quick-icon-wrap">🗺️</div>
-      <div class="quick-label">我的行程</div>
+    <div class="quick-item" onclick="openCreativeStore()">
+      <div class="quick-icon-wrap">🛍️</div>
+      <div class="quick-label">文创市集</div>
     </div>
   </div>
 
@@ -2122,6 +2400,16 @@
         <div class="locate-btn" onclick="locateUser()" title="定位到我的位置">📍</div>
       </div>
     </div>
+  </div>
+
+  <!-- Creative Store Section -->
+  <div class="section-header-row">
+    <div class="section-header-title">🛍️ 文创市集</div>
+    <div class="section-header-link" onclick="openCreativeStore()">全部 ›</div>
+  </div>
+
+  <div class="creative-section">
+    <div class="creative-grid" id="creativeGrid"></div>
   </div>
 
   <!-- Collection Section -->
@@ -2284,6 +2572,15 @@
         <div id="profileTripList"></div>
       </div>
 
+      <!-- Orders -->
+      <div class="profile-section">
+        <div class="profile-section-header">
+          <div class="profile-section-title">🛍️ 我的订单</div>
+          <div class="profile-section-more" onclick="showToast('订单管理开发中')">全部</div>
+        </div>
+        <div id="profileOrderList"></div>
+      </div>
+
       <!-- Favorites -->
       <div class="profile-section">
         <div class="profile-section-header">
@@ -2308,6 +2605,18 @@
       <button class="popup-btn popup-btn-secondary" id="popupBtn2"></button>
     </div>
     <button class="popup-btn popup-btn-trip" id="popupBtnTrip" style="width:100%;margin-top:8px;background:linear-gradient(90deg,var(--gold-light),var(--paper-dark));color:var(--ink);border:1px solid var(--gold);padding:8px 0;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;transition:all .2s;">🗺️ 加入行程</button>
+  </div>
+
+  <!-- Creative Store Modal -->
+  <div class="creative-modal" id="creativeModal">
+    <div class="creative-modal-overlay" onclick="closeCreativeModal()"></div>
+    <div class="creative-modal-content" id="creativeModalContent"></div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div class="creative-modal" id="cartModal">
+    <div class="creative-modal-overlay" onclick="closeCartModal()"></div>
+    <div class="creative-modal-content" id="cartModalContent"></div>
   </div>
 
   <!-- Bottom Navigation -->
@@ -2944,6 +3253,12 @@ function initApp() {
   // Delay render to ensure exhibitionData is defined
   setTimeout(renderExhibitions, 100);
 
+  // Render creative store grid (first 4 items)
+  renderCreativeGrid(4);
+
+  // Render orders
+  renderOrders();
+
   // Animate progress bar
   setTimeout(() => {
     const pf = document.getElementById('progressFill');
@@ -3079,6 +3394,249 @@ const artifactData = [
   { name: '四合如意云纹金盘', era: '元代', tag: '贵族宴饮用具', story: '金匠以精密錾花工艺在盘面刻满缠枝花卉与四合如意纹，这件华贵金盘是元代江南上层贵族设宴盛放果品的贵重器具。', img: 'assets/jinpan_color.png', locked: true },
   { name: '吉州窑白釉褐彩梅瓶', era: '南宋', tag: '宋代民窑瓷器', story: '匠人以褐彩在白瓷面手绘连绵卷草，流转的纹样寄托宋人期盼生生不息、福寿绵延的朴素心愿。', img: 'assets/meiping_color.png', locked: true }
 ];
+
+// ===== CREATIVE GOODS (文创商品) =====
+const creativeData = [
+  { id: 1, name: '铜牛灯迷你台灯', museum: '南京博物院', price: 168, originalPrice: 198, tag: '热销', img: 'assets/niudeng_color.png', desc: '以东汉铜牛灯为原型设计的迷你台灯，还原牛身储烟腔体结构，暖光柔和，兼具摆件与实用功能。', sales: 1200 },
+  { id: 2, name: '蟠螭纹耳盖炉香薰', museum: '南京博物院', price: 128, originalPrice: 158, tag: '新品', img: 'assets/panchilu_color.png', desc: '复刻乾隆芙蓉石蟠螭纹耳盖炉造型，采用天然石膏材质，可滴入精油作为香薰摆件，书房雅物。', sales: 856 },
+  { id: 3, name: '神兽尊陶瓷马克杯', museum: '南京博物院', price: 68, originalPrice: 88, tag: '限量', img: 'assets/shenshouzun_color.png', desc: '以西晋青釉神兽尊为灵感，杯身浮雕神兽纹样，釉色温润，容量350ml，配木质杯盖。', sales: 2340 },
+  { id: 4, name: '云纹金盘金属书签', museum: '南京博物院', price: 35, originalPrice: 45, tag: '', img: 'assets/jinpan_color.png', desc: '四合如意云纹金盘图案蚀刻黄铜书签，薄如蝉翼，配流苏穗子，阅读雅趣之选。', sales: 3500 },
+  { id: 5, name: '六朝莲花纹丝巾', museum: '六朝博物馆', price: 198, originalPrice: 258, tag: '热销', img: 'assets/splash-new.png', desc: '提取六朝莲花纹砖图案，真丝材质，90x90cm方巾，可佩可饰，东方美学日常化。', sales: 670 },
+  { id: 6, name: '明城墙遗址冰箱贴', museum: '明城墙遗址', price: 28, originalPrice: 38, tag: '', img: 'assets/splash-new.png', desc: '立体浮雕南京明城墙段落，金属烤漆工艺，背面强磁吸附，旅行纪念小物。', sales: 4200 }
+];
+
+let cartData = JSON.parse(localStorage.getItem('shanhe_cart') || '[]');
+let orderData = JSON.parse(localStorage.getItem('shanhe_orders') || '[]');
+
+function saveCart() { localStorage.setItem('shanhe_cart', JSON.stringify(cartData)); }
+function saveOrders() { localStorage.setItem('shanhe_orders', JSON.stringify(orderData)); }
+
+// ===== CREATIVE STORE FUNCTIONS =====
+function renderCreativeGrid(limit) {
+  const grid = document.getElementById('creativeGrid');
+  if (!grid) return;
+  const items = limit ? creativeData.slice(0, limit) : creativeData;
+  grid.innerHTML = items.map(item => `
+    <div class="creative-card" onclick="openCreativeDetail(${item.id})">
+      <div class="creative-card-img">🏺</div>
+      <div class="creative-card-body">
+        ${item.tag ? `<div class="creative-card-tag">${item.tag}</div>` : ''}
+        <div class="creative-card-name">${item.name}</div>
+        <div class="creative-card-price">
+          <span class="creative-card-price-now">¥${item.price}</span>
+          <span class="creative-card-price-old">¥${item.originalPrice}</span>
+        </div>
+        <div class="creative-card-meta">已售 ${item.sales}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openCreativeStore() {
+  const modal = document.getElementById('creativeModal');
+  const content = document.getElementById('creativeModalContent');
+  content.innerHTML = `
+    <div class="creative-modal-header">
+      <div class="creative-modal-title">🛍️ 文创市集</div>
+      <button class="creative-modal-close" onclick="closeCreativeModal()">✕</button>
+    </div>
+    <div style="padding: 12px 16px;">
+      <div class="creative-grid">
+        ${creativeData.map(item => `
+          <div class="creative-card" onclick="openCreativeDetail(${item.id})">
+            <div class="creative-card-img">🏺</div>
+            <div class="creative-card-body">
+              ${item.tag ? `<div class="creative-card-tag">${item.tag}</div>` : ''}
+              <div class="creative-card-name">${item.name}</div>
+              <div class="creative-card-price">
+                <span class="creative-card-price-now">¥${item.price}</span>
+                <span class="creative-card-price-old">¥${item.originalPrice}</span>
+              </div>
+              <div class="creative-card-meta">已售 ${item.sales}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  modal.classList.add('show');
+}
+
+function closeCreativeModal() {
+  document.getElementById('creativeModal').classList.remove('show');
+}
+
+function openCreativeDetail(id) {
+  const item = creativeData.find(c => c.id === id);
+  if (!item) return;
+  const modal = document.getElementById('creativeModal');
+  const content = document.getElementById('creativeModalContent');
+  content.innerHTML = `
+    <div class="creative-modal-header">
+      <div class="creative-modal-title">商品详情</div>
+      <button class="creative-modal-close" onclick="closeCreativeModal()">✕</button>
+    </div>
+    <div class="creative-detail-img">🏺</div>
+    <div class="creative-detail-body">
+      ${item.tag ? `<div class="creative-detail-tag">${item.tag}</div>` : ''}
+      <div class="creative-detail-name">${item.name}</div>
+      <div class="creative-detail-museum">🏛️ ${item.museum}</div>
+      <div class="creative-detail-price">
+        <span class="creative-detail-price-now">¥${item.price}</span>
+        <span class="creative-detail-price-old">¥${item.originalPrice}</span>
+      </div>
+      <div class="creative-detail-desc">${item.desc}</div>
+    </div>
+    <div class="creative-detail-action">
+      <button onclick="openCart()">🛒 购物车 (${cartData.length})</button>
+      <button onclick="addToCart(${item.id}); showToast('已加入购物车');">➕ 加入购物车</button>
+    </div>
+  `;
+  modal.classList.add('show');
+}
+
+function addToCart(id) {
+  const item = creativeData.find(c => c.id === id);
+  if (!item) return;
+  const existing = cartData.find(c => c.id === id);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cartData.push({ id: item.id, name: item.name, price: item.price, museum: item.museum, qty: 1 });
+  }
+  saveCart();
+  updateCartBadge();
+}
+
+function removeFromCart(id) {
+  cartData = cartData.filter(c => c.id !== id);
+  saveCart();
+  updateCartBadge();
+  openCart();
+}
+
+function updateCartQty(id, delta) {
+  const item = cartData.find(c => c.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  saveCart();
+  openCart();
+}
+
+function updateCartBadge() {
+  const total = cartData.reduce((sum, c) => sum + c.qty, 0);
+  // Badge could be added to nav items if needed
+}
+
+function openCart() {
+  const modal = document.getElementById('cartModal');
+  const content = document.getElementById('cartModalContent');
+  const total = cartData.reduce((sum, c) => sum + c.price * c.qty, 0);
+
+  if (cartData.length === 0) {
+    content.innerHTML = `
+      <div class="creative-modal-header">
+        <div class="creative-modal-title">🛒 购物车</div>
+        <button class="creative-modal-close" onclick="closeCartModal()">✕</button>
+      </div>
+      <div style="text-align:center;padding:60px 20px;color:var(--ink-muted);">
+        <div style="font-size:48px;margin-bottom:16px;">🛒</div>
+        <div style="font-size:15px;">购物车是空的</div>
+        <div style="font-size:12px;margin-top:8px;">去文创市集挑选心仪好物吧</div>
+      </div>
+    `;
+  } else {
+    content.innerHTML = `
+      <div class="creative-modal-header">
+        <div class="creative-modal-title">🛒 购物车 (${cartData.reduce((s,c)=>s+c.qty,0)}件)</div>
+        <button class="creative-modal-close" onclick="closeCartModal()">✕</button>
+      </div>
+      <div style="padding: 12px 16px;">
+        ${cartData.map(item => `
+          <div class="order-card" style="margin-bottom:10px;">
+            <div class="order-item">
+              <div class="order-item-img">🏺</div>
+              <div class="order-item-info">
+                <div class="order-item-name">${item.name}</div>
+                <div class="order-item-meta">${item.museum}</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="order-item-price">¥${item.price * item.qty}</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+                  <button onclick="updateCartQty(${item.id}, -1)" style="width:24px;height:24px;border-radius:50%;border:1px solid var(--gold-light);background:var(--paper);cursor:pointer;">−</button>
+                  <span style="font-size:13px;font-weight:600;">${item.qty}</span>
+                  <button onclick="updateCartQty(${item.id}, 1)" style="width:24px;height:24px;border-radius:50%;border:1px solid var(--gold-light);background:var(--paper);cursor:pointer;">+</button>
+                </div>
+              </div>
+            </div>
+            <div style="text-align:right;margin-top:8px;">
+              <button onclick="removeFromCart(${item.id})" style="font-size:11px;color:var(--ink-muted);background:none;border:none;cursor:pointer;">删除</button>
+            </div>
+          </div>
+        `).join('')}
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-top:1px solid var(--gold-light);margin-top:8px;">
+          <div style="font-size:13px;color:var(--ink-light);">合计</div>
+          <div style="font-size:20px;font-weight:800;color:var(--cinnabar);">¥${total}</div>
+        </div>
+        <button onclick="submitOrder()" style="width:100%;padding:14px 0;border-radius:12px;border:none;background:linear-gradient(135deg,var(--cinnabar),var(--cinnabar-light));color:#fff;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:8px;">去结算</button>
+      </div>
+    `;
+  }
+  modal.classList.add('show');
+}
+
+function closeCartModal() {
+  document.getElementById('cartModal').classList.remove('show');
+}
+
+function submitOrder() {
+  if (cartData.length === 0) return;
+  const total = cartData.reduce((sum, c) => sum + c.price * c.qty, 0);
+  const orderId = 'ORD' + Date.now().toString().slice(-8);
+  orderData.unshift({
+    id: orderId,
+    items: [...cartData],
+    total: total,
+    status: 'pending',
+    date: new Date().toISOString().slice(0, 10),
+    time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+  });
+  saveOrders();
+  cartData = [];
+  saveCart();
+  updateCartBadge();
+  closeCartModal();
+  showToast('🎉 订单提交成功！');
+  renderOrders();
+}
+
+function renderOrders() {
+  const list = document.getElementById('profileOrderList');
+  if (!list) return;
+  if (orderData.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--ink-muted);font-size:13px;">暂无订单</div>';
+    return;
+  }
+  list.innerHTML = orderData.map(order => `
+    <div class="order-card">
+      <div class="order-header">
+        <span class="order-id">订单 ${order.id}</span>
+        <span class="order-status ${order.status}">${order.status === 'pending' ? '待发货' : '已完成'}</span>
+      </div>
+      ${order.items.map(item => `
+        <div class="order-item" style="margin-bottom:8px;">
+          <div class="order-item-img">🏺</div>
+          <div class="order-item-info">
+            <div class="order-item-name">${item.name}</div>
+            <div class="order-item-meta">x${item.qty}</div>
+          </div>
+          <div class="order-item-price">¥${item.price * item.qty}</div>
+        </div>
+      `).join('')}
+      <div class="order-total">共 ${order.items.reduce((s,i)=>s+i.qty,0)} 件 合计 <span>¥${order.total}</span></div>
+    </div>
+  `).join('');
+}
 
 function openArtifact(i) {
   const data = artifactData[i];
