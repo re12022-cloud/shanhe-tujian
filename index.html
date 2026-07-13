@@ -448,21 +448,23 @@
 
     /* Museum info popup */
     .museum-popup {
-      position: absolute;
-      bottom: 12px; left: 12px; right: 12px;
-      background: rgba(248, 240, 224, 0.95);
+      position: fixed;
+      bottom: 80px; left: 16px; right: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+      background: rgba(248, 240, 224, 0.98);
       border: 1px solid rgba(107, 93, 79, 0.2);
-      border-radius: 12px;
-      padding: 14px 16px;
+      border-radius: 16px;
+      padding: 16px 18px;
       backdrop-filter: blur(10px);
-      z-index: 10;
+      z-index: 200;
       display: none;
       animation: popupSlide 0.3s ease;
-      box-shadow: 0 4px 16px var(--shadow);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     }
     .museum-popup.show { display: block; }
     @keyframes popupSlide {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     .popup-name {
@@ -762,6 +764,719 @@
       width: 5px; height: 5px;
       background: var(--cinnabar);
       border-radius: 50%;
+    }
+
+    /* ===== TAB PAGE SYSTEM ===== */
+    .tab-page { display: none; animation: fadeIn 0.3s ease; }
+    .tab-page.active { display: block; }
+
+    /* ===== HERO BANNER (参考故宫App) ===== */
+    .hero-banner {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      border-radius: 0 0 20px 20px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #2C1810 0%, #5C3A1E 40%, #8B5E3C 100%);
+      box-shadow: 0 4px 20px rgba(44,24,16,0.3);
+    }
+    .hero-banner-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 30%, rgba(44,24,16,0.6) 100%),
+                  url('assets/splash-new.png') center/cover no-repeat;
+      opacity: 0.85;
+    }
+    .hero-banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(139,35,35,0.15) 0%, rgba(212,175,55,0.08) 100%);
+    }
+    .hero-banner-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 20px 20px;
+    }
+    .hero-banner-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: #F5E6C8;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      letter-spacing: 4px;
+      margin-bottom: 4px;
+      writing-mode: horizontal-tb;
+    }
+    .hero-banner-sub {
+      font-size: 12px;
+      color: rgba(245,230,200,0.75);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .hero-search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245,240,224,0.92);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 8px 16px;
+      border: 1px solid rgba(212,175,55,0.3);
+    }
+    .hero-search-bar input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      color: var(--ink);
+      font-family: inherit;
+      outline: none;
+    }
+    .hero-search-bar input::placeholder { color: var(--ink-muted); }
+    .hero-search-icon { font-size: 16px; opacity: 0.6; }
+    .hero-city-btn {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 12px;
+      color: var(--cinnabar);
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(201,169,97,0.12);
+      white-space: nowrap;
+    }
+    .hero-actions {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 3;
+    }
+    .hero-action-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(245,240,224,0.2);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(245,230,200,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .hero-action-btn:active { transform: scale(0.9); }
+    .hero-action-btn svg { width: 16px; height: 16px; color: #F5E6C8; }
+
+    /* ===== QUICK FUNCTION GRID ===== */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      padding: 16px 12px 12px;
+    }
+    .quick-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 6px 2px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+    .quick-item:active {
+      transform: scale(0.92);
+      background: rgba(201,169,97,0.08);
+    }
+    .quick-icon-wrap {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--paper-dark), var(--paper));
+      border: 1px solid var(--gold-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 2px 8px rgba(168,152,130,0.15);
+    }
+    .quick-label {
+      font-size: 10px;
+      color: var(--ink-light);
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* ===== DUAL CARD SECTION ===== */
+    .dual-card-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 16px;
+      margin-bottom: 16px;
+    }
+    .dual-card {
+      background: linear-gradient(160deg, var(--paper-dark), var(--paper));
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid var(--gold-light);
+      box-shadow: 0 2px 10px rgba(168,152,130,0.08);
+    }
+    .dual-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .dual-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .dual-card-arrow {
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+    .dual-card-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 6px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dual-card-item:active { background: rgba(201,169,97,0.08); }
+    .dual-card-item + .dual-card-item {
+      border-top: 1px solid rgba(201,169,97,0.12);
+    }
+    .dual-card-item-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .dual-card-item-icon.red {
+      background: rgba(201,55,44,0.1);
+    }
+    .dual-card-item-icon.gold {
+      background: rgba(201,169,97,0.12);
+    }
+    .dual-card-item-text {
+      font-size: 12px;
+      color: var(--ink-light);
+      font-weight: 500;
+    }
+
+    /* ===== SECTION HEADER (参考故宫品展) ===== */
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 8px;
+    }
+    .section-header-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .section-header-link {
+      font-size: 12px;
+      color: var(--ink-muted);
+      cursor: pointer;
+    }
+
+    /* ===== EXHIBITION CARD (参考故宫品展) ===== */
+    .exh-card-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 0 16px 12px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .exh-card-scroll::-webkit-scrollbar { display: none; }
+    .exh-card-item {
+      flex-shrink: 0;
+      width: 200px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--paper-dark);
+      border: 1px solid var(--gold-light);
+      box-shadow: 0 2px 10px rgba(168,152,130,0.1);
+      scroll-snap-align: start;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .exh-card-item:active { transform: scale(0.97); }
+    .exh-card-img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+    .exh-card-body {
+      padding: 10px 12px;
+    }
+    .exh-card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+    .exh-card-meta {
+      font-size: 10px;
+      color: var(--ink-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .exh-card-badge {
+      display: inline-block;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(201,55,44,0.1);
+      color: var(--cinnabar);
+      margin-right: 4px;
+    }
+
+    /* ===== MAP CARD (compact) ===== */
+    .map-card {
+      margin: 0 16px 16px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--gold-light);
+      box-shadow: 0 2px 10px rgba(168,152,130,0.1);
+      background: var(--paper-dark);
+    }
+    .map-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: linear-gradient(90deg, rgba(201,169,97,0.08), transparent);
+    }
+    .map-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .map-card-more {
+      font-size: 11px;
+      color: var(--ink-muted);
+      cursor: pointer;
+    }
+    .map-card-body {
+      position: relative;
+      height: 200px;
+    }
+    .map-card-body .map-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .map-card-body .museum-marker {
+      position: absolute;
+    }
+    .map-card-body .locate-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+    /* ===== LIGHT PAGE (点亮成就) ===== */
+    .light-page-content {
+      padding: 12px 16px 80px;
+    }
+    .light-hero {
+      background: linear-gradient(135deg, var(--paper-dark), var(--paper));
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--gold-light);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .light-hero::before {
+      content: '🏮';
+      position: absolute;
+      font-size: 80px;
+      opacity: 0.06;
+      top: -10px; right: -10px;
+    }
+    .light-hero-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .light-hero-sub {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+    }
+    .light-stats-row {
+      display: flex;
+      justify-content: space-around;
+      gap: 8px;
+    }
+    .light-stat-item {
+      text-align: center;
+    }
+    .light-stat-num {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--cinnabar);
+      line-height: 1.2;
+    }
+    .light-stat-label {
+      font-size: 11px;
+      color: var(--ink-muted);
+    }
+    .light-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 20px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .badge-item {
+      background: var(--paper-dark);
+      border-radius: 12px;
+      padding: 12px 6px;
+      text-align: center;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .badge-item.unlocked {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, var(--gold-light), var(--paper-dark));
+    }
+    .badge-item.locked {
+      opacity: 0.4;
+      filter: grayscale(1);
+    }
+    .badge-icon {
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+    .badge-name {
+      font-size: 10px;
+      color: var(--ink-light);
+      line-height: 1.3;
+    }
+    .heatmap-container {
+      background: var(--paper-dark);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid var(--gold-light);
+    }
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    .heatmap-cell {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      background: rgba(168,152,130,0.15);
+      font-size: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-muted);
+    }
+    .heatmap-cell.lvl1 { background: rgba(201,169,97,0.3); }
+    .heatmap-cell.lvl2 { background: rgba(201,169,97,0.55); }
+    .heatmap-cell.lvl3 { background: rgba(201,55,44,0.4); }
+    .heatmap-cell.lvl4 { background: rgba(201,55,44,0.7); }
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--ink-muted);
+      justify-content: flex-end;
+    }
+    .heatmap-legend-cell {
+      width: 10px; height: 10px; border-radius: 2px;
+    }
+
+    /* ===== COLLECTION PAGE (图鉴) ===== */
+    .collection-page-content {
+      padding: 12px 16px 80px;
+    }
+    .scroll-album {
+      background: linear-gradient(180deg, var(--paper-dark), var(--paper));
+      border-radius: 12px;
+      border: 1px solid var(--gold-light);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .scroll-album-header {
+      background: linear-gradient(90deg, var(--cinnabar), var(--cinnabar-light));
+      color: var(--paper);
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .scroll-album-body {
+      padding: 12px;
+    }
+    .scroll-album-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .album-card {
+      background: var(--paper);
+      border-radius: 10px;
+      border: 1px solid var(--gold-light);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+      position: relative;
+    }
+    .album-card:active { transform: scale(0.96); }
+    .album-card-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+    .album-card-name {
+      font-size: 10px;
+      color: var(--ink);
+      padding: 4px 6px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .album-card.locked .album-card-img {
+      filter: grayscale(1) brightness(0.5);
+    }
+    .album-card.locked::after {
+      content: '🔒';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+    }
+    .album-card-seal {
+      position: absolute;
+      top: 4px; right: 4px;
+      width: 20px; height: 26px;
+      background: url('assets/seal-lit.png') center/contain no-repeat;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--ink-muted);
+    }
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.3;
+    }
+    .empty-state-text {
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ===== PROFILE PAGE (我的) ===== */
+    .profile-page-content {
+      padding: 0 0 80px;
+    }
+    .profile-header {
+      background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-light));
+      padding: 24px 20px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-header::before {
+      content: '🏔';
+      position: absolute;
+      font-size: 100px;
+      opacity: 0.05;
+      bottom: -20px; right: -10px;
+    }
+    .profile-avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 8px;
+      border: 3px solid var(--gold);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .profile-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--paper);
+    }
+    .profile-tag {
+      font-size: 11px;
+      color: rgba(255,255,255,0.8);
+      margin-top: 2px;
+    }
+    .profile-stats-bar {
+      display: flex;
+      background: var(--paper-dark);
+      border-radius: 12px;
+      margin: -12px 16px 16px;
+      padding: 14px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 1;
+    }
+    .profile-stat-item {
+      flex: 1;
+      text-align: center;
+      border-right: 1px solid var(--gold-light);
+    }
+    .profile-stat-item:last-child { border-right: none; }
+    .profile-stat-num {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--cinnabar);
+    }
+    .profile-stat-label {
+      font-size: 10px;
+      color: var(--ink-muted);
+    }
+    .profile-section {
+      padding: 0 16px;
+      margin-bottom: 16px;
+    }
+    .profile-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .profile-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .profile-section-more {
+      font-size: 12px;
+      color: var(--ink-muted);
+      cursor: pointer;
+    }
+    .trip-card {
+      background: var(--paper-dark);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      border: 1px solid var(--gold-light);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .trip-card-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold-light), var(--paper-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .trip-card-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .trip-card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .trip-card-meta {
+      font-size: 11px;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+    .trip-card-status {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .trip-card-status.upcoming {
+      background: rgba(201,55,44,0.12);
+      color: var(--cinnabar);
+    }
+    .trip-card-status.done {
+      background: rgba(168,152,130,0.2);
+      color: var(--ink-muted);
+    }
+    .fav-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--paper-dark);
+      border-radius: 10px;
+      padding: 8px;
+      margin-bottom: 6px;
+      border: 1px solid var(--gold-light);
+    }
+    .fav-card img {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .fav-card-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .fav-card-era {
+      font-size: 10px;
+      color: var(--ink-muted);
     }
 
     /* ===== FLOATING LANTERNS ===== */
@@ -1227,36 +1942,45 @@
   <!-- Floating lanterns background -->
   <div class="floating-lanterns" id="lanterns"></div>
 
-  <!-- Top Bar -->
-  <div class="top-bar">
-    <div class="top-bar-title">山河图鉴</div>
-    <div class="top-bar-actions">
-      <div class="top-bar-btn" onclick="showNotifications()">
+  <!-- ===== PAGE: EXPLORE ===== -->
+  <div class="tab-page active" id="page-explore">
+
+  <!-- Hero Banner (参考故宫App) -->
+  <div class="hero-banner">
+    <div class="hero-banner-bg"></div>
+    <div class="hero-banner-overlay"></div>
+    <div class="hero-actions">
+      <div class="hero-action-btn" onclick="showNotifications()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
           <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
-        <div class="notification-dot"></div>
       </div>
-      <div class="top-bar-btn" onclick="showProfile()">
+      <div class="hero-action-btn" onclick="showProfile()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
         </svg>
       </div>
     </div>
+    <div class="hero-banner-content">
+      <div class="hero-banner-title">山河图鉴</div>
+      <div class="hero-banner-sub">点亮文物 · 收藏中华千年之美</div>
+      <div class="hero-search-bar">
+        <span class="hero-search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索博物馆、展览、文物..." oninput="handleSearch(this.value)" />
+        <div class="hero-city-btn" onclick="toggleCityDropdown()">
+          <span>📍</span>
+          <span id="currentCityName">南京</span>
+          <span style="font-size:8px;">▼</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- City Selector -->
-  <div class="city-selector-wrap" id="citySelectorWrap">
-    <div class="city-selector-bar" id="citySelectorBar" onclick="toggleCityDropdown()">
-      <div class="city-label">
-        <span class="city-icon">📍</span>
-        <span id="currentCityName">南京</span>
-      </div>
-      <span class="city-arrow">▼</span>
-    </div>
-    <div class="city-dropdown" id="cityDropdown">
+  <!-- City Dropdown (hidden, toggled by hero city btn) -->
+  <div class="city-selector-wrap" id="citySelectorWrap" style="position:absolute;z-index:200;visibility:hidden;top:180px;left:16px;right:16px;">
+    <div class="city-dropdown" id="cityDropdown" style="display:block;position:relative;box-shadow:0 8px 24px rgba(0,0,0,0.15);">
       <div class="city-dropdown-title">热门城市</div>
       <div class="city-tags" id="cityTags"></div>
       <div class="city-dropdown-title">当前城市博物馆</div>
@@ -1264,37 +1988,90 @@
     </div>
   </div>
 
-  <!-- Search Bar -->
-  <div class="search-bar">
-    <span class="search-icon">🔍</span>
-    <input class="search-input" id="searchInput" type="text" placeholder="搜索博物馆、展览、文物..." oninput="handleSearch(this.value)" />
-    <span class="search-clear" id="searchClear" onclick="clearSearch()">✕</span>
+  <!-- Search Results (hidden by default) -->
+  <div class="search-results" id="searchResults" style="margin:0 16px;"></div>
+
+  <!-- Quick Function Grid -->
+  <div class="quick-grid">
+    <div class="quick-item" onclick="switchToTab('light')">
+      <div class="quick-icon-wrap">🏮</div>
+      <div class="quick-label">文物点亮</div>
+    </div>
+    <div class="quick-item" onclick="document.getElementById('mapCardSection').scrollIntoView({behavior:'smooth'})">
+      <div class="quick-icon-wrap">🗺️</div>
+      <div class="quick-label">博物馆</div>
+    </div>
+    <div class="quick-item" onclick="document.getElementById('exhCardSection').scrollIntoView({behavior:'smooth'})">
+      <div class="quick-icon-wrap">🖼️</div>
+      <div class="quick-label">近期展览</div>
+    </div>
+    <div class="quick-item" onclick="switchToTab('collection')">
+      <div class="quick-icon-wrap">📜</div>
+      <div class="quick-label">文物图鉴</div>
+    </div>
+    <div class="quick-item" onclick="switchToTab('profile')">
+      <div class="quick-icon-wrap">🗺️</div>
+      <div class="quick-label">我的行程</div>
+    </div>
   </div>
 
-    <!-- Search Tabs -->
-    <div class="search-tabs" id="searchTabs">
-      <div class="search-tab active" onclick="switchSearchTab(this, 'all')">全部</div>
-      <div class="search-tab" onclick="switchSearchTab(this, 'museum')">博物馆</div>
-      <div class="search-tab" onclick="switchSearchTab(this, 'exhibition')">展览</div>
-      <div class="search-tab" onclick="switchSearchTab(this, 'artifact')">文物</div>
+  <!-- Dual Card Section -->
+  <div class="dual-card-row">
+    <div class="dual-card">
+      <div class="dual-card-header">
+        <div class="dual-card-title">🏛️ 博物馆导览</div>
+        <div class="dual-card-arrow" onclick="document.getElementById('mapCardSection').scrollIntoView({behavior:'smooth'})">›</div>
+      </div>
+      <div class="dual-card-item" onclick="showMuseumPopup(0, this)">
+        <div class="dual-card-item-icon red">🏛️</div>
+        <div class="dual-card-item-text">南京博物院</div>
+      </div>
+      <div class="dual-card-item" onclick="showMuseumPopup(1, this)">
+        <div class="dual-card-item-icon gold">🏯</div>
+        <div class="dual-card-item-text">德基艺术博物馆</div>
+      </div>
+      <div class="dual-card-item" onclick="showMuseumPopup(2, this)">
+        <div class="dual-card-item-icon red">🏘️</div>
+        <div class="dual-card-item-text">六朝博物馆</div>
+      </div>
     </div>
-
-    <!-- Search Results -->
-    <div class="search-results" id="searchResults"></div>
-
-  <!-- Scrollable Content -->
-  <div class="scroll-content">
-
-    <!-- Map Section -->
-    <div class="divider">
-      <div class="divider-line"></div>
-      <div class="divider-icon">🗺️</div>
-      <div class="divider-text">附近博物馆</div>
-      <div class="divider-line"></div>
+    <div class="dual-card">
+      <div class="dual-card-header">
+        <div class="dual-card-title">🏺 文物品鉴</div>
+        <div class="dual-card-arrow" onclick="switchToTab('collection')">›</div>
+      </div>
+      <div class="dual-card-item" onclick="openArtifact(0)">
+        <div class="dual-card-item-icon gold">🪔</div>
+        <div class="dual-card-item-text">东汉铜牛灯</div>
+      </div>
+      <div class="dual-card-item" onclick="openArtifact(1)">
+        <div class="dual-card-item-icon red">🏺</div>
+        <div class="dual-card-item-text">蟠螭纹耳盖炉</div>
+      </div>
+      <div class="dual-card-item" onclick="openArtifact(2)">
+        <div class="dual-card-item-icon gold">🐉</div>
+        <div class="dual-card-item-text">青釉神兽尊</div>
+      </div>
     </div>
+  </div>
 
-    <div class="map-section">
-      <div class="map-container" id="mapContainer">
+  <!-- Exhibition Section (横向卡片) -->
+  <div id="exhCardSection">
+    <div class="section-header-row">
+      <div class="section-header-title">🖼️ 近期展览</div>
+      <div class="section-header-link" onclick="showToast('更多展览敬请期待')">更多 ›</div>
+    </div>
+    <div class="exh-card-scroll" id="exhCardScroll"></div>
+  </div>
+
+  <!-- Map Card Section -->
+  <div id="mapCardSection">
+    <div class="section-header-row">
+      <div class="section-header-title">🗺️ 附近博物馆</div>
+      <div class="section-header-link" onclick="showToast('全城地图开发中')">全图 ›</div>
+    </div>
+    <div class="map-card">
+      <div class="map-card-body">
         <canvas class="map-canvas" id="mapCanvas"></canvas>
 
         <!-- Museum Markers -->
@@ -1341,89 +2118,196 @@
           <div class="marker-distance">5.3km</div>
         </div>
 
-        <!-- Museum Popup -->
-        <div class="museum-popup" id="museumPopup">
-          <button class="popup-close" onclick="closePopup()">✕</button>
-          <div class="popup-name" id="popupName"></div>
-          <div class="popup-desc" id="popupDesc"></div>
-          <div class="popup-tags" id="popupTags"></div>
-          <div class="popup-actions">
-            <button class="popup-btn popup-btn-primary" id="popupBtn1"></button>
-            <button class="popup-btn popup-btn-secondary" id="popupBtn2"></button>
-          </div>
-        </div>
-
         <!-- Locate Button -->
         <div class="locate-btn" onclick="locateUser()" title="定位到我的位置">📍</div>
       </div>
     </div>
+  </div>
 
-    <!-- Exhibition Section -->
-    <div class="divider">
-      <div class="divider-line"></div>
-      <div class="divider-icon">🏮</div>
-      <div class="divider-text">南京近期展览</div>
-      <div class="divider-line"></div>
+  <!-- Collection Section -->
+  <div class="section-header-row">
+    <div class="section-header-title">📜 我的收藏</div>
+    <div class="section-header-link" onclick="switchToTab('collection')">查看图鉴 ›</div>
+  </div>
+
+  <div style="padding: 0 16px; margin-bottom: 8px;">
+    <div class="collection-stats" style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-muted);">
+      <span class="lantern">🏮</span>
+      <span>已点亮 <span class="collection-count" style="color:var(--cinnabar);font-weight:700;">3</span> / 5</span>
     </div>
-
-    <div class="exhibition-scroll" id="exhibitionScroll"></div>
-
-    <!-- Free Exhibition List -->
-    <div class="divider" style="margin-top: 12px;">
-      <div class="divider-line"></div>
-      <div class="divider-icon">✨</div>
-      <div class="divider-text">免费展览</div>
-      <div class="divider-line"></div>
-    </div>
-
-    <div class="free-exhibition-list" id="freeExhibitionList"></div>
-
-    <!-- Collection Section -->
-    <div class="divider" style="margin-top: 8px;">
-      <div class="divider-line"></div>
-      <div class="divider-icon">📜</div>
-      <div class="divider-text">我的收藏</div>
-      <div class="divider-line"></div>
-    </div>
-
-    <div class="collection-header">
-      <div class="collection-stats">
-        <span class="lantern">🏮</span>
-        <span>已点亮 <span class="collection-count">3</span> / 5</span>
-      </div>
-      <div class="collection-link" onclick="openCollection()">
-        查看全部 →
-      </div>
-    </div>
-
-    <div class="progress-bar">
+    <div class="progress-bar" style="margin-top:6px;">
       <div class="progress-fill" id="progressFill" style="width: 0%"></div>
     </div>
+  </div>
 
-    <div class="collection-scroll">
-      <div class="artifact-card lit" onclick="openArtifact(0)">
-        <img class="artifact-img" src="assets/niudeng_color.png" alt="东汉铜牛灯" />
-        <div class="artifact-name">东汉铜牛灯</div>
-      </div>
-      <div class="artifact-card lit" onclick="openArtifact(1)">
-        <img class="artifact-img" src="assets/panchilu_color.png" alt="乾隆芙蓉石蟠螭纹耳盖炉" />
-        <div class="artifact-name">乾隆蟠螭耳盖炉</div>
-      </div>
-      <div class="artifact-card lit" onclick="openArtifact(2)">
-        <img class="artifact-img" src="assets/shenshouzun_color.png" alt="青釉神兽尊" />
-        <div class="artifact-name">青釉神兽尊</div>
-      </div>
-      <div class="artifact-card locked" onclick="openArtifact(3)">
-        <img class="artifact-img" src="assets/jinpan_color.png" alt="四合如意云纹金盘" />
-        <div class="artifact-name">???</div>
-      </div>
-      <div class="artifact-card locked" onclick="openArtifact(4)">
-        <img class="artifact-img" src="assets/meiping_color.png" alt="吉州窑白釉褐彩梅瓶" />
-        <div class="artifact-name">???</div>
-      </div>
+  <div class="collection-scroll" id="collectionScroll">
+    <div class="artifact-card lit" onclick="openArtifact(0)">
+      <img class="artifact-img" src="assets/niudeng_color.png" alt="东汉铜牛灯" />
+      <div class="artifact-name">东汉铜牛灯</div>
     </div>
+    <div class="artifact-card lit" onclick="openArtifact(1)">
+      <img class="artifact-img" src="assets/panchilu_color.png" alt="乾隆芙蓉石蟠螭纹耳盖炉" />
+      <div class="artifact-name">乾隆蟠螭耳盖炉</div>
+    </div>
+    <div class="artifact-card lit" onclick="openArtifact(2)">
+      <img class="artifact-img" src="assets/shenshouzun_color.png" alt="青釉神兽尊" />
+      <div class="artifact-name">青釉神兽尊</div>
+    </div>
+    <div class="artifact-card locked" onclick="openArtifact(3)">
+      <img class="artifact-img" src="assets/jinpan_color.png" alt="四合如意云纹金盘" />
+      <div class="artifact-name">???</div>
+    </div>
+    <div class="artifact-card locked" onclick="openArtifact(4)">
+      <img class="artifact-img" src="assets/meiping_color.png" alt="吉州窑白釉褐彩梅瓶" />
+      <div class="artifact-name">???</div>
+    </div>
+  </div>
 
-    <div style="height: 20px;"></div>
+  <div style="height: 20px;"></div>
+  </div><!-- /page-explore -->
+
+  <!-- ===== PAGE: LIGHT (点亮成就) ===== -->
+  <div class="tab-page" id="page-light">
+    <div class="top-bar">
+      <div class="top-bar-title">点亮成就</div>
+    </div>
+    <div class="light-page-content">
+      <!-- Hero Stats -->
+      <div class="light-hero">
+        <div class="light-hero-title">🏮 点亮之旅</div>
+        <div class="light-hero-sub">每一步探索，都是与千年前工匠的对话</div>
+        <div class="light-stats-row">
+          <div class="light-stat-item">
+            <div class="light-stat-num" id="lightStatMuseums">3</div>
+            <div class="light-stat-label">打卡博物馆</div>
+          </div>
+          <div class="light-stat-item">
+            <div class="light-stat-num" id="lightStatRelics">3</div>
+            <div class="light-stat-label">点亮文物</div>
+          </div>
+          <div class="light-stat-item">
+            <div class="light-stat-num" id="lightStatDays">5</div>
+            <div class="light-stat-label">打卡天数</div>
+          </div>
+          <div class="light-stat-item">
+            <div class="light-stat-num" id="lightStatBadges">4</div>
+            <div class="light-stat-label">获得徽章</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="light-section-title">🏅 成就徽章</div>
+      <div class="badge-grid" id="badgeGrid"></div>
+
+      <!-- Heatmap Calendar -->
+      <div class="light-section-title">📅 打卡日历</div>
+      <div class="heatmap-container">
+        <div class="heatmap-grid" id="heatmapGrid"></div>
+        <div class="heatmap-legend">
+          <span>少</span>
+          <div class="heatmap-legend-cell" style="background:rgba(168,152,130,0.15)"></div>
+          <div class="heatmap-legend-cell" style="background:rgba(201,169,97,0.3)"></div>
+          <div class="heatmap-legend-cell" style="background:rgba(201,169,97,0.55)"></div>
+          <div class="heatmap-legend-cell" style="background:rgba(201,55,44,0.4)"></div>
+          <div class="heatmap-legend-cell" style="background:rgba(201,55,44,0.7)"></div>
+          <span>多</span>
+        </div>
+      </div>
+
+      <div style="height: 20px;"></div>
+    </div>
+  </div><!-- /page-light -->
+
+  <!-- ===== PAGE: COLLECTION (图鉴) ===== -->
+  <div class="tab-page" id="page-collection">
+    <div class="top-bar">
+      <div class="top-bar-title">文物图鉴</div>
+    </div>
+    <div class="collection-page-content">
+      <div class="light-hero" style="padding:16px;margin-bottom:12px;">
+        <div class="light-hero-title" style="font-size:16px;">📖 文物收藏册</div>
+        <div class="light-hero-sub">画卷式浏览 · 按博物馆分组</div>
+        <div class="light-stats-row" style="margin-top:12px;">
+          <div class="light-stat-item">
+            <div class="light-stat-num" id="collectionStatLit">3</div>
+            <div class="light-stat-label">已点亮</div>
+          </div>
+          <div class="light-stat-item">
+            <div class="light-stat-num" id="collectionStatLocked">2</div>
+            <div class="light-stat-label">未解锁</div>
+          </div>
+          <div class="light-stat-item">
+            <div class="light-stat-num" id="collectionStatTotal">5</div>
+            <div class="light-stat-label">总收藏</div>
+          </div>
+        </div>
+      </div>
+      <div id="collectionAlbumContainer"></div>
+      <div style="height: 20px;"></div>
+    </div>
+  </div><!-- /page-collection -->
+
+  <!-- ===== PAGE: PROFILE (我的) ===== -->
+  <div class="tab-page" id="page-profile">
+    <div class="profile-page-content">
+      <div class="profile-header">
+        <div class="profile-avatar">🏜</div>
+        <div class="profile-name">山河旅人</div>
+        <div class="profile-tag">国风文化探索者 · LV.3</div>
+      </div>
+      <div class="profile-stats-bar">
+        <div class="profile-stat-item">
+          <div class="profile-stat-num" id="profileStatTrips">0</div>
+          <div class="profile-stat-label">行程</div>
+        </div>
+        <div class="profile-stat-item">
+          <div class="profile-stat-num" id="profileStatLit">3</div>
+          <div class="profile-stat-label">点亮</div>
+        </div>
+        <div class="profile-stat-item">
+          <div class="profile-stat-num" id="profileStatFav">3</div>
+          <div class="profile-stat-label">收藏</div>
+        </div>
+        <div class="profile-stat-item">
+          <div class="profile-stat-num" id="profileStatDays">5</div>
+          <div class="profile-stat-label">打卡</div>
+        </div>
+      </div>
+
+      <!-- Trip List -->
+      <div class="profile-section">
+        <div class="profile-section-header">
+          <div class="profile-section-title">🗺️ 我的行程</div>
+          <div class="profile-section-more" onclick="showToast('行程管理开发中')">管理</div>
+        </div>
+        <div id="profileTripList"></div>
+      </div>
+
+      <!-- Favorites -->
+      <div class="profile-section">
+        <div class="profile-section-header">
+          <div class="profile-section-title">⭐ 我的收藏</div>
+          <div class="profile-section-more" onclick="switchToCollection()">查看图鉴</div>
+        </div>
+        <div id="profileFavList"></div>
+      </div>
+
+      <div style="height: 20px;"></div>
+    </div>
+  </div><!-- /page-profile -->
+
+  <!-- Global Museum Popup -->
+  <div class="museum-popup" id="museumPopup">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-name" id="popupName"></div>
+    <div class="popup-desc" id="popupDesc"></div>
+    <div class="popup-tags" id="popupTags"></div>
+    <div class="popup-actions">
+      <button class="popup-btn popup-btn-primary" id="popupBtn1"></button>
+      <button class="popup-btn popup-btn-secondary" id="popupBtn2"></button>
+    </div>
+    <button class="popup-btn popup-btn-trip" id="popupBtnTrip" style="width:100%;margin-top:8px;background:linear-gradient(90deg,var(--gold-light),var(--paper-dark));color:var(--ink);border:1px solid var(--gold);padding:8px 0;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;transition:all .2s;">🗺️ 加入行程</button>
   </div>
 
   <!-- Bottom Navigation -->
@@ -1657,7 +2541,9 @@ setTimeout(() => {
 // ===== MAP CANVAS (Simple Sketch Style) =====
 function drawMap() {
   const canvas = document.getElementById('mapCanvas');
-  const container = document.getElementById('mapContainer');
+  if (!canvas) return;
+  const container = canvas.parentElement;
+  if (!container) return;
   const ctx = canvas.getContext('2d');
 
   canvas.width = container.clientWidth * 2;
@@ -1815,6 +2701,13 @@ function showMuseumPopup(index, el) {
   btn1.onclick = () => openBooking(index);
   document.getElementById('popupBtn2').textContent = data.btn2;
 
+  // Bind "加入行程" button
+  const tripBtn = document.getElementById('popupBtnTrip');
+  tripBtn.onclick = () => {
+    addToTrip(data.name, '🏛️');
+    closePopup();
+  };
+
   const tagsEl = document.getElementById('popupTags');
   tagsEl.innerHTML = data.tags.map(t => `<span class="popup-tag">${t}</span>`).join('');
 
@@ -1829,6 +2722,204 @@ function closePopup() {
 function switchTab(el, tab) {
   document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
   el.classList.add('active');
+  // Switch page content
+  document.querySelectorAll('.tab-page').forEach(page => page.classList.remove('active'));
+  const pageMap = { explore: 'page-explore', light: 'page-light', collection: 'page-collection', profile: 'page-profile' };
+  const target = document.getElementById(pageMap[tab]);
+  if (target) target.classList.add('active');
+  // Lazy render page content
+  if (tab === 'light') renderLightPage();
+  if (tab === 'collection') renderCollectionPage();
+  if (tab === 'profile') renderProfilePage();
+  // Scroll to top
+  window.scrollTo(0, 0);
+}
+
+function switchToCollection() {
+  const navItems = document.querySelectorAll('.nav-item');
+  if (navItems[2]) switchTab(navItems[2], 'collection');
+}
+
+function switchToTab(tab) {
+  const navItems = document.querySelectorAll('.nav-item');
+  const tabMap = { explore: 0, light: 1, collection: 2, profile: 3 };
+  const idx = tabMap[tab];
+  if (idx !== undefined && navItems[idx]) switchTab(navItems[idx], tab);
+}
+
+// ===== TRIP DATA (行程闭环) =====
+let tripData = [
+  { id: 1, name: '南京博物院', icon: '🏛️', date: '2026-07-15', time: '上午场', visitors: 2, status: 'upcoming', source: '预约', ticketCode: 'SH20260715090000' }
+];
+
+function addToTrip(name, icon, date, time) {
+  const trip = {
+    id: Date.now(),
+    name: name,
+    icon: icon || '🏛️',
+    date: date || new Date().toISOString().slice(0, 10),
+    time: time || '待定',
+    visitors: 1,
+    status: 'upcoming',
+    source: '手动添加',
+    ticketCode: null
+  };
+  tripData.unshift(trip);
+  showToast('🗺️ 已加入行程：' + name);
+  // If profile page is active, re-render
+  if (document.getElementById('page-profile').classList.contains('active')) {
+    renderProfilePage();
+  }
+}
+
+// ===== LIGHT PAGE (点亮成就) =====
+const badgeData = [
+  { icon: '🏮', name: '初次点亮', desc: '点亮第一件文物', unlocked: true },
+  { icon: '🏛️', name: '博物馆达人', desc: '打卡3座博物馆', unlocked: true },
+  { icon: '📜', name: '图鉴收藏家', desc: '收藏3件文物', unlocked: true },
+  { icon: '🔥', name: '连续打卡', desc: '连续3天打卡', unlocked: true },
+  { icon: '🗺️', name: '城市探索', desc: '探索2个城市', unlocked: false },
+  { icon: '🏺', name: '文物专家', desc: '点亮5件文物', unlocked: false },
+  { icon: '🌟', name: '全勤打卡', desc: '连续7天打卡', unlocked: false },
+  { icon: '👑', name: '国风大师', desc: '解锁全部成就', unlocked: false }
+];
+
+// Simulated check-in data for heatmap (last 5 weeks = 35 days)
+const checkinData = [0,0,1,2,0,1,0, 0,1,0,2,1,0,0, 0,0,1,0,2,1,0, 0,1,2,1,0,0,0, 0,0,1,0,2,0,0];
+
+function renderLightPage() {
+  // Render badges
+  const badgeGrid = document.getElementById('badgeGrid');
+  if (!badgeGrid) return;
+  badgeGrid.innerHTML = badgeData.map(b => `
+    <div class="badge-item ${b.unlocked ? 'unlocked' : 'locked'}" onclick="showToast('${b.unlocked ? '🏅 ' + b.name + '\\n' + b.desc : '🔒 ' + b.name + '\\n' + b.desc + '\\n继续探索即可解锁'}')">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+    </div>
+  `).join('');
+
+  // Render heatmap
+  const heatmapGrid = document.getElementById('heatmapGrid');
+  if (heatmapGrid) {
+    const dayLabels = ['一','二','三','四','五','六','日'];
+    heatmapGrid.innerHTML = checkinData.map((lvl, i) => {
+      const dayIdx = i % 7;
+      const dayLabel = lvl === 0 ? dayLabels[dayIdx] : '';
+      const cssClass = lvl > 0 ? `lvl${lvl}` : '';
+      return `<div class="heatmap-cell ${cssClass}">${dayLabel}</div>`;
+    }).join('');
+  }
+
+  // Update stats
+  const litCount = artifactData.filter(a => !a.locked).length;
+  const unlockedBadges = badgeData.filter(b => b.unlocked).length;
+  const checkinDays = checkinData.filter(v => v > 0).length;
+  const el1 = document.getElementById('lightStatMuseums'); if (el1) el1.textContent = '3';
+  const el2 = document.getElementById('lightStatRelics'); if (el2) el2.textContent = litCount;
+  const el3 = document.getElementById('lightStatDays'); if (el3) el3.textContent = checkinDays;
+  const el4 = document.getElementById('lightStatBadges'); if (el4) el4.textContent = unlockedBadges;
+}
+
+// ===== COLLECTION PAGE (图鉴) =====
+function renderCollectionPage() {
+  const container = document.getElementById('collectionAlbumContainer');
+  if (!container) return;
+
+  // Group artifacts by museum
+  const groups = [
+    { museum: '南京博物院', icon: '🏛️', artifacts: artifactData }
+  ];
+
+  container.innerHTML = groups.map(g => {
+    const cards = g.artifacts.map((a, i) => `
+      <div class="album-card ${a.locked ? 'locked' : ''}" onclick="openArtifact(${i})">
+        ${!a.locked ? '<div class="album-card-seal"></div>' : ''}
+        <img class="album-card-img" src="${a.img}" alt="${a.name}" />
+        <div class="album-card-name">${a.locked ? '???' : a.name}</div>
+      </div>
+    `).join('');
+    const litCount = g.artifacts.filter(a => !a.locked).length;
+    return `
+      <div class="scroll-album">
+        <div class="scroll-album-header">
+          <span>${g.icon} ${g.museum}</span>
+          <span>${litCount}/${g.artifacts.length}</span>
+        </div>
+        <div class="scroll-album-body">
+          <div class="scroll-album-grid">${cards}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Update stats
+  const litCount = artifactData.filter(a => !a.locked).length;
+  const lockedCount = artifactData.filter(a => a.locked).length;
+  const el1 = document.getElementById('collectionStatLit'); if (el1) el1.textContent = litCount;
+  const el2 = document.getElementById('collectionStatLocked'); if (el2) el2.textContent = lockedCount;
+  const el3 = document.getElementById('collectionStatTotal'); if (el3) el3.textContent = artifactData.length;
+}
+
+// ===== PROFILE PAGE (我的) =====
+function renderProfilePage() {
+  // Render trip list
+  const tripList = document.getElementById('profileTripList');
+  if (tripList) {
+    if (tripData.length === 0) {
+      tripList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🗺️</div>
+          <div class="empty-state-text">暂无行程<br>去探索页面加入行程吧</div>
+        </div>
+      `;
+    } else {
+      tripList.innerHTML = tripData.map(t => `
+        <div class="trip-card">
+          <div class="trip-card-icon">${t.icon}</div>
+          <div class="trip-card-info">
+            <div class="trip-card-name">${t.name}</div>
+            <div class="trip-card-meta">📅 ${t.date} · ${t.time} · ${t.visitors}人 · ${t.source}</div>
+          </div>
+          <div class="trip-card-status ${t.status}">${t.status === 'upcoming' ? '待出行' : '已完成'}</div>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Render favorites (lit artifacts)
+  const favList = document.getElementById('profileFavList');
+  if (favList) {
+    const litArtifacts = artifactData.filter(a => !a.locked);
+    if (litArtifacts.length === 0) {
+      favList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">⭐</div>
+          <div class="empty-state-text">暂无收藏<br>点亮文物后自动收录</div>
+        </div>
+      `;
+    } else {
+      favList.innerHTML = litArtifacts.map((a, i) => {
+        const idx = artifactData.indexOf(a);
+        return `
+        <div class="fav-card" onclick="openArtifact(${idx})">
+          <img src="${a.img}" alt="${a.name}" />
+          <div>
+            <div class="fav-card-name">${a.name}</div>
+            <div class="fav-card-era">${a.era}</div>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+  }
+
+  // Update stats
+  const litCount = artifactData.filter(a => !a.locked).length;
+  const checkinDays = checkinData.filter(v => v > 0).length;
+  const el1 = document.getElementById('profileStatTrips'); if (el1) el1.textContent = tripData.length;
+  const el2 = document.getElementById('profileStatLit'); if (el2) el2.textContent = litCount;
+  const el3 = document.getElementById('profileStatFav'); if (el3) el3.textContent = litCount;
+  const el4 = document.getElementById('profileStatDays'); if (el4) el4.textContent = checkinDays;
 }
 
 // ===== FLOATING LANTERNS =====
@@ -1850,11 +2941,13 @@ function spawnLantern() {
 // ===== INIT APP =====
 function initApp() {
   drawMap();
-  renderExhibitions();
+  // Delay render to ensure exhibitionData is defined
+  setTimeout(renderExhibitions, 100);
 
   // Animate progress bar
   setTimeout(() => {
-    document.getElementById('progressFill').style.width = '60%';
+    const pf = document.getElementById('progressFill');
+    if (pf) pf.style.width = '60%';
   }, 300);
 
   // Spawn lanterns periodically
@@ -1934,32 +3027,20 @@ const freeExhibitionData = [
 ];
 
 function renderExhibitions() {
-  // Featured exhibitions (horizontal scroll cards)
-  const scrollEl = document.getElementById('exhibitionScroll');
-  scrollEl.innerHTML = exhibitionData.map(ex => `
-    <div class="exhibition-card" onclick="openExhibitionDetail(${exhibitionData.indexOf(ex)})">
-      <img class="exhibition-cover" src="${ex.cover}" alt="${ex.name}" />
-      <div class="exhibition-info">
-        <div class="exhibition-title">${ex.name}</div>
-        <div class="exhibition-date">📅 ${ex.date}</div>
-        <div class="exhibition-venue">🏛️ ${ex.venue}</div>
-        <div class="exhibition-meta">
-          <span class="exhibition-badge ${ex.badgeType === 'jade' ? 'jade' : ex.badgeType === 'free' ? 'free' : ''}">${ex.badge}</span>
-          <span class="exhibition-price ${ex.priceType === 'free' ? 'free' : ''}">${ex.price}</span>
+  // Featured exhibitions (new card style - 参考故宫App)
+  const scrollEl = document.getElementById('exhCardScroll');
+  if (!scrollEl) return;
+  scrollEl.innerHTML = exhibitionData.map((ex, i) => `
+    <div class="exh-card-item" onclick="openExhibitionDetail(${i})">
+      <img class="exh-card-img" src="${ex.cover}" alt="${ex.name}" />
+      <div class="exh-card-body">
+        <div class="exh-card-name">${ex.name}</div>
+        <div class="exh-card-meta">
+          <span class="exh-card-badge">${ex.badge}</span>
+          <span>${ex.date}</span>
         </div>
+        <div class="exh-card-meta" style="margin-top:2px;">🏛️ ${ex.venue}</div>
       </div>
-    </div>
-  `).join('');
-
-  // Free exhibition list (compact)
-  const listEl = document.getElementById('freeExhibitionList');
-  listEl.innerHTML = freeExhibitionData.map(ex => `
-    <div class="free-exhibition-item" onclick="showToast('📍 ${ex.venue}\\n📅 ${ex.date}')">
-      <div class="free-exhibition-info">
-        <div class="free-exhibition-name">${ex.name}</div>
-        <div class="free-exhibition-meta">${ex.venue} · ${ex.date}</div>
-      </div>
-      <div class="free-exhibition-tag">免费</div>
     </div>
   `).join('');
 }
@@ -1984,7 +3065,7 @@ function openExhibitionDetail(i) {
         <p class="artifact-modal-story">${ex.desc}</p>
         <div class="artifact-modal-action">
           <button onclick="showToast('🎫 即将跳转官方购票页面')">🎫 购票/预约</button>
-          <button onclick="showToast('📍 已添加到行程规划')">📍 加入行程</button>
+          <button onclick="addToTrip('${ex.name.replace(/'/g, "\\'")}', '🖼️'); this.closest('.artifact-modal').remove()">📍 加入行程</button>
         </div>
       </div>
     </div>
@@ -2146,10 +3227,12 @@ let searchTab = 'all';
 
 // ===== CITY SELECTOR =====
 function toggleCityDropdown() {
-  const dd = document.getElementById('cityDropdown');
-  dd.classList.toggle('show');
-  if (dd.classList.contains('show')) {
+  const wrap = document.getElementById('citySelectorWrap');
+  if (wrap.style.visibility === 'hidden') {
+    wrap.style.visibility = 'visible';
     renderCityDropdown();
+  } else {
+    wrap.style.visibility = 'hidden';
   }
 }
 
@@ -2188,10 +3271,12 @@ function selectCity(city) {
 }
 
 function selectMuseum(name) {
-  document.getElementById('cityDropdown').classList.remove('show');
-  const searchInput = document.querySelector('.search-input');
-  searchInput.value = name;
-  handleSearch(name);
+  document.getElementById('citySelectorWrap').style.visibility = 'hidden';
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.value = name;
+    handleSearch(name);
+  }
 }
 
 function updateExhibitionsForCity(city) {
@@ -2199,23 +3284,22 @@ function updateExhibitionsForCity(city) {
   if (!data) return;
 
   // Update featured exhibitions
-  const scrollEl = document.getElementById('exhibitionScroll');
+  const scrollEl = document.getElementById('exhCardScroll');
+  if (!scrollEl) return;
   if (data.exhibitions.length > 0) {
-    const exhCards = data.exhibitions.map((ex, i) => `
-      <div class="exhibition-card" onclick="showToast('🎫 ${ex.name}\\n${ex.venue} · ${ex.date}\\n${ex.price}')">
+    scrollEl.innerHTML = data.exhibitions.map((ex, i) => `
+      <div class="exh-card-item" onclick="showToast('🎫 ${ex.name}\\n${ex.venue} · ${ex.date}\\n${ex.price}')">
         <div style="width:100%;height:120px;background:linear-gradient(135deg,rgba(201,55,44,0.15),rgba(201,169,97,0.15));display:flex;align-items:center;justify-content:center;font-size:32px;">🎭</div>
-        <div class="exhibition-info">
-          <div class="exhibition-title">${ex.name}</div>
-          <div class="exhibition-date">📅 ${ex.date}</div>
-          <div class="exhibition-venue">🏛️ ${ex.venue}</div>
-          <div class="exhibition-meta">
-            <span class="exhibition-badge">在展</span>
-            <span class="exhibition-price ${ex.price === '免费' ? 'free' : ''}">${ex.price}</span>
+        <div class="exh-card-body">
+          <div class="exh-card-name">${ex.name}</div>
+          <div class="exh-card-meta">
+            <span class="exh-card-badge">在展</span>
+            <span>${ex.date}</span>
           </div>
+          <div class="exh-card-meta" style="margin-top:2px;">🏛️ ${ex.venue}</div>
         </div>
       </div>
     `).join('');
-    scrollEl.innerHTML = exhCards;
   } else {
     scrollEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--ink-muted);font-size:13px;">暂无该城市展览信息</div>';
   }
@@ -2224,26 +3308,22 @@ function updateExhibitionsForCity(city) {
 // Close dropdown on outside click
 document.addEventListener('click', function(e) {
   const wrap = document.getElementById('citySelectorWrap');
-  if (wrap && !wrap.contains(e.target)) {
-    document.getElementById('cityDropdown').classList.remove('show');
+  if (wrap && !wrap.contains(e.target) && !e.target.closest('.hero-city-btn')) {
+    wrap.style.visibility = 'hidden';
   }
 });
 
 // ===== SEARCH =====
 function handleSearch(value) {
-  const clearBtn = document.getElementById('searchClear');
-  clearBtn.classList.toggle('show', value.length > 0);
-  const tabsEl = document.getElementById('searchTabs');
   const resultsEl = document.getElementById('searchResults');
+  if (!resultsEl) return;
 
   if (!value.trim()) {
-    tabsEl.classList.remove('show');
     resultsEl.classList.remove('show');
     resultsEl.innerHTML = '';
     return;
   }
 
-  tabsEl.classList.add('show');
   resultsEl.classList.add('show');
 
   let results = [];
@@ -2293,27 +3373,45 @@ function handleSearch(value) {
 }
 
 function clearSearch() {
-  const searchInput = document.querySelector('.search-input');
-  searchInput.value = '';
-  document.getElementById('searchTabs').classList.remove('show');
-  document.getElementById('searchResults').classList.remove('show');
-  document.getElementById('searchResults').innerHTML = '';
-  searchInput.focus();
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.value = '';
+    searchInput.focus();
+  }
+  const resultsEl = document.getElementById('searchResults');
+  if (resultsEl) {
+    resultsEl.classList.remove('show');
+    resultsEl.innerHTML = '';
+  }
 }
 
 function switchSearchTab(el, tab) {
   searchTab = tab;
-  document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  const searchInput = document.querySelector('.search-input');
-  handleSearch(searchInput.value);
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) handleSearch(searchInput.value);
 }
 
 function onSearchResultClick(type, name) {
+  // 关闭搜索结果
+  const resultsEl = document.getElementById('searchResults');
+  if (resultsEl) { resultsEl.classList.remove('show'); resultsEl.innerHTML = ''; }
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) searchInput.value = '';
+
   if (type === 'museum') {
-    showToast(`🏛️ ${name}\\n即将跳转博物馆详情`);
+    const idx = museumData.findIndex(m => m.name === name);
+    if (idx >= 0) {
+      showMuseumPopup(idx, document.querySelectorAll('.museum-marker')[idx] || document.body);
+    } else {
+      showToast('🏛️ ' + name + '\n该博物馆详情页开发中');
+    }
   } else if (type === 'exhibition') {
-    showToast(`🎭 ${name}\\n即将跳转展览详情`);
+    const idx = exhibitionData.findIndex(e => e.name === name);
+    if (idx >= 0) {
+      openExhibitionDetail(idx);
+    } else {
+      showToast('🎭 ' + name + '\n该展览详情页开发中');
+    }
   } else if (type === 'artifact') {
     const idx = artifactData.findIndex(a => a.name === name);
     if (idx >= 0) openArtifact(idx);
@@ -2547,15 +3645,29 @@ function submitBooking() {
   // Generate ticket info
   const data = museumData[bookingMuseumIdx];
   const timeLabel = selectedTimeSlot === 'am' ? '上午场' : '下午场';
+  const ticketCode = generateTicketCode();
   document.getElementById('ticketTitle').textContent = '预约成功';
   document.getElementById('ticketSubtitle').textContent = `${data.name} · ${timeLabel}`;
-  document.getElementById('ticketCode').textContent = generateTicketCode();
+  document.getElementById('ticketCode').textContent = ticketCode;
+
+  // Auto-add to trip list (行程闭环)
+  tripData.unshift({
+    id: Date.now(),
+    name: data.name,
+    icon: '🏛️',
+    date: selectedDate || new Date().toISOString().slice(0, 10),
+    time: timeLabel,
+    visitors: visitorCount,
+    status: 'upcoming',
+    source: '预约',
+    ticketCode: ticketCode
+  });
 
   bookingStep = 4;
   showBookingStep(4);
   updateStepUI();
   updateFooterButtons();
-  showToast('🎉 预约成功！请保存电子票');
+  showToast('🎉 预约成功！已自动加入行程');
 }
 
 function generateTicketCode() {
