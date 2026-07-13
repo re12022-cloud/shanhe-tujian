@@ -827,6 +827,80 @@
       inset: 0;
       background: linear-gradient(135deg, rgba(91,168,156,0.2) 0%, rgba(126,200,184,0.1) 50%, rgba(168,220,200,0.05) 100%);
     }
+    /* 波浪装饰 */
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.25) 0%, transparent 70%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(180deg, transparent 0%, rgba(91,168,156,0.15) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* 山峦形状 */
+    .hero-mountains {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-mountains::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -10%;
+      width: 70%;
+      height: 60px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+    .hero-mountains::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: -10%;
+      width: 60%;
+      height: 45px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+    /* 装饰emoji */
+    .hero-deco-ding {
+      position: absolute;
+      bottom: 10px;
+      left: 16px;
+      font-size: 60px;
+      opacity: 0.15;
+      z-index: 1;
+      pointer-events: none;
+      line-height: 1;
+    }
+    .hero-deco-ting {
+      position: absolute;
+      bottom: 10px;
+      right: 16px;
+      font-size: 50px;
+      opacity: 0.12;
+      z-index: 1;
+      pointer-events: none;
+      line-height: 1;
+    }
     .hero-clouds {
       position: absolute;
       inset: 0;
@@ -843,9 +917,26 @@
     .hero-clouds .cloud-1 { top: 15%; left: 5%; animation: cloudFloat 8s ease-in-out infinite; }
     .hero-clouds .cloud-2 { top: 25%; right: 10%; width: 80px; height: 40px; animation: cloudFloat 10s ease-in-out infinite 2s; }
     .hero-clouds .cloud-3 { top: 8%; left: 45%; width: 60px; height: 30px; animation: cloudFloat 12s ease-in-out infinite 1s; }
+    /* 祥云emoji */
+    .hero-cloud-emoji {
+      position: absolute;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.2;
+      animation: cloudFloatEmoji 6s ease-in-out infinite;
+    }
+    .hero-cloud-emoji.c1 { top: 8%; left: 10%; font-size: 24px; animation-delay: 0s; }
+    .hero-cloud-emoji.c2 { top: 15%; right: 20%; font-size: 20px; animation-delay: 1.5s; }
+    .hero-cloud-emoji.c3 { top: 5%; left: 55%; font-size: 28px; animation-delay: 3s; }
+    .hero-cloud-emoji.c4 { top: 20%; left: 35%; font-size: 22px; animation-delay: 4.5s; }
     @keyframes cloudFloat {
       0%, 100% { transform: translateX(0); }
       50% { transform: translateX(15px); }
+    }
+    @keyframes cloudFloatEmoji {
+      0%, 100% { transform: translateX(0) translateY(0); }
+      33% { transform: translateX(8px) translateY(-4px); }
+      66% { transform: translateX(-4px) translateY(2px); }
     }
     .hero-banner-content {
       position: relative;
@@ -939,7 +1030,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       cursor: pointer;
       padding: 6px 2px;
       border-radius: 12px;
@@ -950,19 +1041,18 @@
       background: rgba(201,169,97,0.08);
     }
     .quick-icon-wrap {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.7);
-      border: 1px solid rgba(126,200,184,0.3);
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      background: #F5F0E8;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 2px 8px rgba(91,168,156,0.12);
+      font-size: 28px;
+      box-shadow: 0 2px 8px rgba(91,168,156,0.08);
     }
     .quick-label {
-      font-size: 10px;
-      color: var(--ink-light);
+      font-size: 12px;
+      color: #6B5D4F;
       font-weight: 500;
       text-align: center;
       line-height: 1.2;
@@ -977,11 +1067,11 @@
       margin-bottom: 16px;
     }
     .dual-card {
-      background: linear-gradient(160deg, var(--paper-dark), var(--paper));
-      border-radius: 18px;
-      padding: 16px;
-      border: 1px solid rgba(201, 169, 97, 0.2);
-      box-shadow: 0 4px 16px rgba(168,152,130,0.1);
+      background: #F8F5EE;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid rgba(201, 169, 97, 0.15);
+      box-shadow: 0 2px 8px rgba(168,152,130,0.06);
     }
     .dual-card-header {
       display: flex;
@@ -990,7 +1080,7 @@
       margin-bottom: 10px;
     }
     .dual-card-title {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--ink);
       display: flex;
@@ -1002,9 +1092,9 @@
       color: var(--ink-muted);
     }
     .dual-card-header-icon {
-      font-size: 18px;
-      width: 32px;
-      height: 32px;
+      font-size: 16px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       background: rgba(91,168,156,0.1);
       display: flex;
@@ -1015,68 +1105,69 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 6px;
+      padding: 8px 4px;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
     }
     .dual-card-item:active { background: rgba(201,169,97,0.08); }
     .dual-card-item + .dual-card-item {
-      border-top: 1px solid rgba(201,169,97,0.12);
+      border-top: 1px solid rgba(201,169,97,0.1);
     }
     .dual-card-item-icon {
-      width: 36px; height: 36px;
-      border-radius: 10px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 14px;
       flex-shrink: 0;
-    }
-    .dual-card-item-icon.red {
-      background: rgba(201,55,44,0.1);
-    }
-    .dual-card-item-icon.gold {
-      background: rgba(201,169,97,0.12);
+      background: rgba(126,200,184,0.15);
     }
     .dual-card-item-text {
-      font-size: 12px;
+      flex: 1;
+      font-size: 13px;
       color: var(--ink-light);
       font-weight: 500;
+    }
+    .dual-card-item-arrow {
+      font-size: 14px;
+      color: var(--ink-muted);
     }
 
     /* ===== EXHIBITION BANNER SECTION ===== */
     .exhibition-banner-section {
-      background: linear-gradient(180deg, #7EC8B8 0%, #A8DCC8 60%, transparent 100%);
-      padding: 12px 0 16px;
-      margin: 12px 0;
+      background: linear-gradient(135deg, #5BA89C, #7EC8B8);
+      padding: 14px 0 16px;
+      margin: 0 16px;
       border-radius: 16px;
     }
     .exhibition-banner-section .section-header-row {
-      padding-top: 0;
+      padding: 0 16px 10px;
     }
     .exhibition-banner-section .section-header-title {
       color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 700;
       text-shadow: 0 1px 2px rgba(0,0,0,0.15);
-    }
-    .exhibition-banner-section .section-header-link {
-      color: rgba(255,255,255,0.85);
-    }
-    .exhibition-banner-section .exh-card-scroll {
-      padding-bottom: 8px;
-    }
-    .exhibition-bronze-deco {
       display: flex;
       align-items: center;
       gap: 6px;
-      margin: 0 16px 10px;
-      padding: 8px 14px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 20px;
-      font-size: 12px;
-      color: #FFFFFF;
-      font-weight: 500;
-      backdrop-filter: blur(4px);
+    }
+    .exhibition-banner-section .section-header-title::before {
+      content: '☁️';
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    .exhibition-banner-section .section-header-link {
+      color: rgba(255,255,255,0.9);
+      font-size: 13px;
+    }
+    .exhibition-banner-section .exh-card-scroll {
+      padding-bottom: 4px;
+    }
+    .exhibition-bronze-deco {
+      display: none;
     }
 
     /* ===== SECTION HEADER (参考故宫品展) ===== */
@@ -1488,60 +1579,50 @@
       min-height: 100%;
     }
     .light-hero {
-      background: linear-gradient(135deg, #FFFFFF 0%, #F0FAF7 100%);
+      background: #FFFFFF;
       border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      border: 1px solid rgba(126,200,184,0.25);
+      padding: 16px;
       margin-bottom: 16px;
-      position: relative;
-      overflow: hidden;
       box-shadow: 0 2px 12px rgba(91,168,156,0.08);
-    }
-    .light-hero::before {
-      content: '🏮';
-      position: absolute;
-      font-size: 80px;
-      opacity: 0.04;
-      top: -10px; right: -10px;
-    }
-    .light-hero-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 4px;
-    }
-    .light-hero-sub {
-      font-size: 12px;
-      color: var(--ink-muted);
-      margin-bottom: 16px;
     }
     .light-stats-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 12px;
     }
     .light-stat-item {
-      background: rgba(232,244,240,0.6);
-      border-radius: 12px;
-      padding: 12px 8px;
-      text-align: center;
-      border: 1px solid rgba(126,200,184,0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      border: none;
+      background: transparent;
     }
-    .light-stat-icon {
+    .light-stat-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(126,200,184,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 20px;
-      margin-bottom: 4px;
+      flex-shrink: 0;
     }
-    .light-stat-num {
-      font-size: 24px;
-      font-weight: 800;
-      color: #5BA89C;
-      line-height: 1.2;
+    .light-stat-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
     .light-stat-label {
-      font-size: 11px;
-      color: var(--ink-muted);
-      margin-top: 2px;
+      font-size: 12px;
+      color: #6B5D4F;
+    }
+    .light-stat-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: #C9A961;
+      line-height: 1.2;
     }
     .light-section-title {
       font-size: 14px;
@@ -1552,65 +1633,79 @@
       align-items: center;
       gap: 6px;
     }
-    .badge-item {
-      background: #FFFFFF;
-      border-radius: 12px;
-      padding: 12px 6px;
-      text-align: center;
-      border: 1px solid transparent;
-      transition: all 0.2s;
-      box-shadow: 0 1px 4px rgba(91,168,156,0.06);
-    }
-    .badge-item.unlocked {
-      border-color: rgba(201,169,97,0.4);
-      background: linear-gradient(135deg, #FFF9E6, #FFFFFF);
-    }
-    .badge-item.locked {
-      opacity: 0.45;
-      filter: grayscale(1);
-      background: #F5F5F5;
-    }
     .badge-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
+      margin-bottom: 16px;
     }
-    .badge-icon {
-      font-size: 28px;
-      margin-bottom: 4px;
+    .badge-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    .badge-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .badge-item.unlocked .badge-icon-wrap {
+      background: linear-gradient(135deg, #E8C86A, #D4A843);
+      border: 3px solid #C9A961;
+      box-shadow: inset 0 0 0 3px #C9A961, 0 2px 8px rgba(201,169,97,0.3);
+    }
+    .badge-item.locked .badge-icon-wrap {
+      background: linear-gradient(135deg, #E0E0E0, #BDBDBD);
+      border: 3px solid #BDBDBD;
+    }
+    .badge-item.locked .badge-icon-wrap {
+      color: #888;
     }
     .badge-name {
       font-size: 10px;
       color: var(--ink-light);
       line-height: 1.3;
+      text-align: center;
+    }
+    .badge-item.locked .badge-name {
+      color: #999;
     }
     .heatmap-container {
       background: #FFFFFF;
-      border-radius: 12px;
-      padding: 14px;
-      border: 1px solid rgba(126,200,184,0.2);
+      border-radius: 16px;
+      padding: 16px;
       box-shadow: 0 2px 8px rgba(91,168,156,0.06);
     }
     .heatmap-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      margin-bottom: 8px;
+      gap: 6px;
+      margin-bottom: 12px;
     }
     .heatmap-cell {
-      aspect-ratio: 1;
-      border-radius: 4px;
-      background: rgba(200,200,200,0.25);
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: #E8E8E8;
       font-size: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--ink-muted);
     }
-    .heatmap-cell.lvl1 { background: rgba(200,200,200,0.45); }
-    .heatmap-cell.lvl2 { background: rgba(180,140,140,0.55); }
-    .heatmap-cell.lvl3 { background: rgba(180,80,80,0.65); }
-    .heatmap-cell.lvl4 { background: rgba(160,40,40,0.85); }
+    .heatmap-cell.lvl1 { background: #F0D5A8; }
+    .heatmap-cell.lvl2 { background: #E8A87A; }
+    .heatmap-cell.lvl3 { background: #D4764A; }
+    .heatmap-cell.lvl4 { background: #B8402A; }
     .heatmap-legend {
       display: flex;
       align-items: center;
@@ -2341,6 +2436,9 @@
   <div class="hero-banner">
     <div class="hero-banner-bg"></div>
     <div class="hero-banner-overlay"></div>
+    <div class="hero-mountains"></div>
+    <div class="hero-deco-ding">🏺</div>
+    <div class="hero-deco-ting">🏯</div>
     <div class="hero-clouds">
       <svg class="cloud-1" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
         <path d="M25,40 Q15,40 15,30 Q15,15 35,15 Q45,5 60,10 Q75,5 85,15 Q105,15 105,30 Q105,40 95,40 Z"/>
@@ -2352,6 +2450,10 @@
         <path d="M25,40 Q15,40 15,30 Q15,15 35,15 Q45,5 60,10 Q75,5 85,15 Q105,15 105,30 Q105,40 95,40 Z"/>
       </svg>
     </div>
+    <div class="hero-cloud-emoji c1">☁️</div>
+    <div class="hero-cloud-emoji c2">☁️</div>
+    <div class="hero-cloud-emoji c3">☁️</div>
+    <div class="hero-cloud-emoji c4">☁️</div>
     <div class="hero-actions">
       <div class="hero-action-btn" onclick="showNotifications()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2426,16 +2528,19 @@
         <div class="dual-card-header-icon">🏛️</div>
       </div>
       <div class="dual-card-item" onclick="showMuseumPopup(0, this)">
-        <div class="dual-card-item-icon red">🏛️</div>
+        <div class="dual-card-item-icon">🏛️</div>
         <div class="dual-card-item-text">南京博物院</div>
+        <div class="dual-card-item-arrow">›</div>
       </div>
       <div class="dual-card-item" onclick="showMuseumPopup(1, this)">
-        <div class="dual-card-item-icon gold">🏯</div>
+        <div class="dual-card-item-icon">🏯</div>
         <div class="dual-card-item-text">德基艺术博物馆</div>
+        <div class="dual-card-item-arrow">›</div>
       </div>
       <div class="dual-card-item" onclick="showMuseumPopup(2, this)">
-        <div class="dual-card-item-icon red">🏘️</div>
+        <div class="dual-card-item-icon">🏘️</div>
         <div class="dual-card-item-text">六朝博物馆</div>
+        <div class="dual-card-item-arrow">›</div>
       </div>
     </div>
     <div class="dual-card">
@@ -2444,16 +2549,19 @@
         <div class="dual-card-header-icon">🏺</div>
       </div>
       <div class="dual-card-item" onclick="openArtifact(0)">
-        <div class="dual-card-item-icon gold">🪔</div>
+        <div class="dual-card-item-icon">🪔</div>
         <div class="dual-card-item-text">东汉铜牛灯</div>
+        <div class="dual-card-item-arrow">›</div>
       </div>
       <div class="dual-card-item" onclick="openArtifact(1)">
-        <div class="dual-card-item-icon red">🏺</div>
+        <div class="dual-card-item-icon">🏺</div>
         <div class="dual-card-item-text">蟠螭纹耳盖炉</div>
+        <div class="dual-card-item-arrow">›</div>
       </div>
       <div class="dual-card-item" onclick="openArtifact(2)">
-        <div class="dual-card-item-icon gold">🐉</div>
+        <div class="dual-card-item-icon">🐉</div>
         <div class="dual-card-item-text">青釉神兽尊</div>
+        <div class="dual-card-item-arrow">›</div>
       </div>
     </div>
   </div>
@@ -2464,7 +2572,6 @@
       <div class="section-header-title">近期展览</div>
       <div class="section-header-link" onclick="showToast('更多展览敬请期待')">更多 ›</div>
     </div>
-    <div class="exhibition-bronze-deco">🍶 青铜器特展 · 穿越时空的对话</div>
     <div class="exh-card-scroll" id="exhCardScroll"></div>
   </div>
 
@@ -2588,28 +2695,34 @@
     <div class="light-page-content">
       <!-- Hero Stats -->
       <div class="light-hero">
-        <div class="light-hero-title">🏮 点亮之旅</div>
-        <div class="light-hero-sub">每一步探索，都是与千年前工匠的对话</div>
         <div class="light-stats-row">
           <div class="light-stat-item">
-            <div class="light-stat-icon">🏛️</div>
-            <div class="light-stat-num" id="lightStatMuseums">3</div>
-            <div class="light-stat-label">博物馆打卡</div>
+            <div class="light-stat-icon-wrap">🏛️</div>
+            <div class="light-stat-info">
+              <div class="light-stat-label">博物馆打卡</div>
+              <div class="light-stat-num" id="lightStatMuseums">3</div>
+            </div>
           </div>
           <div class="light-stat-item">
-            <div class="light-stat-icon">🔓</div>
-            <div class="light-stat-num" id="lightStatRelics">3</div>
-            <div class="light-stat-label">解锁的神器</div>
+            <div class="light-stat-icon-wrap">🔓</div>
+            <div class="light-stat-info">
+              <div class="light-stat-label">解锁的神器</div>
+              <div class="light-stat-num" id="lightStatRelics">3</div>
+            </div>
           </div>
           <div class="light-stat-item">
-            <div class="light-stat-icon">☀️</div>
-            <div class="light-stat-num" id="lightStatDays">14</div>
-            <div class="light-stat-label">打卡日</div>
+            <div class="light-stat-icon-wrap">☀️</div>
+            <div class="light-stat-info">
+              <div class="light-stat-label">打卡日</div>
+              <div class="light-stat-num" id="lightStatDays">14</div>
+            </div>
           </div>
           <div class="light-stat-item">
-            <div class="light-stat-icon">🏅</div>
-            <div class="light-stat-num" id="lightStatBadges">4</div>
-            <div class="light-stat-label">连章受得成</div>
+            <div class="light-stat-icon-wrap">🏅</div>
+            <div class="light-stat-info">
+              <div class="light-stat-label">连章受得成</div>
+              <div class="light-stat-num" id="lightStatBadges">4</div>
+            </div>
           </div>
         </div>
       </div>
@@ -2624,11 +2737,11 @@
         <div class="heatmap-grid" id="heatmapGrid"></div>
         <div class="heatmap-legend">
           <span>少</span>
-          <div class="heatmap-legend-cell" style="background:rgba(200,200,200,0.25)"></div>
-          <div class="heatmap-legend-cell" style="background:rgba(200,200,200,0.45)"></div>
-          <div class="heatmap-legend-cell" style="background:rgba(180,140,140,0.55)"></div>
-          <div class="heatmap-legend-cell" style="background:rgba(180,80,80,0.65)"></div>
-          <div class="heatmap-legend-cell" style="background:rgba(160,40,40,0.85)"></div>
+          <div class="heatmap-legend-cell" style="background:#E8E8E8"></div>
+          <div class="heatmap-legend-cell" style="background:#F0D5A8"></div>
+          <div class="heatmap-legend-cell" style="background:#E8A87A"></div>
+          <div class="heatmap-legend-cell" style="background:#D4764A"></div>
+          <div class="heatmap-legend-cell" style="background:#B8402A"></div>
           <span>多</span>
         </div>
       </div>
@@ -3231,7 +3344,7 @@ function renderLightPage() {
   if (!badgeGrid) return;
   badgeGrid.innerHTML = badgeData.map(b => `
     <div class="badge-item ${b.unlocked ? 'unlocked' : 'locked'}" onclick="showToast('${b.unlocked ? '🏅 ' + b.name + '\\n' + b.desc : '🔒 ' + b.name + '\\n' + b.desc + '\\n继续探索即可解锁'}')">
-      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-icon-wrap">${b.unlocked ? b.icon : '🔒'}</div>
       <div class="badge-name">${b.name}</div>
     </div>
   `).join('');
