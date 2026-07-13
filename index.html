@@ -324,7 +324,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 110px;
+      padding-bottom: 130px;
     }
     .scroll-content::-webkit-scrollbar { width: 0; }
 
@@ -740,21 +740,21 @@
       bottom: 8px;
       left: 12px;
       right: 12px;
-      height: 80px;
-      background: transparent;
-      display: flex;
-      align-items: center;
       z-index: 100;
+      line-height: 0; /* remove inline spacing */
     }
     .nav-bg-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+    }
+    .nav-items-overlay {
       position: absolute;
       inset: 0;
-      background-image: url('assets/nav-icons-cropped.png');
-      background-size: 100% auto;
-      background-repeat: no-repeat;
-      background-position: center top;
-      pointer-events: none;
-      z-index: 0;
+      display: flex;
+      align-items: stretch;
     }
     .nav-item {
       display: flex;
@@ -764,8 +764,6 @@
       cursor: pointer;
       position: relative;
       flex: 1;
-      height: 80px;
-      z-index: 1;
       transition: all 0.2s;
     }
     .nav-item:active { transform: scale(0.94); }
@@ -780,8 +778,8 @@
     }
     .nav-dot {
       position: absolute;
-      top: 10px;
-      right: calc(50% - 24px);
+      top: 14%;
+      right: 28%;
       width: 8px;
       height: 8px;
       background: var(--cinnabar);
@@ -791,7 +789,7 @@
     }
     .nav-active-indicator {
       position: absolute;
-      bottom: 8px;
+      bottom: 12%;
       left: 50%;
       transform: translateX(-50%);
       width: 22px;
@@ -2659,19 +2657,21 @@
 
   <!-- Bottom Navigation -->
   <div class="bottom-nav">
-    <div class="nav-bg-img"></div>
-    <div class="nav-item active" onclick="switchTab(this, 'explore')">
-      <div class="nav-active-indicator"></div>
-    </div>
-    <div class="nav-item" onclick="switchTab(this, 'light')">
-      <div class="nav-active-indicator"></div>
-      <div class="nav-dot"></div>
-    </div>
-    <div class="nav-item" onclick="switchTab(this, 'collection')">
-      <div class="nav-active-indicator"></div>
-    </div>
-    <div class="nav-item" onclick="switchTab(this, 'profile')">
-      <div class="nav-active-indicator"></div>
+    <img class="nav-bg-img" src="assets/nav-icons-cropped.png" alt="导航">
+    <div class="nav-items-overlay">
+      <div class="nav-item active" onclick="switchTab(this, 'explore')">
+        <div class="nav-active-indicator"></div>
+      </div>
+      <div class="nav-item" onclick="switchTab(this, 'light')">
+        <div class="nav-active-indicator"></div>
+        <div class="nav-dot"></div>
+      </div>
+      <div class="nav-item" onclick="switchTab(this, 'collection')">
+        <div class="nav-active-indicator"></div>
+      </div>
+      <div class="nav-item" onclick="switchTab(this, 'profile')">
+        <div class="nav-active-indicator"></div>
+      </div>
     </div>
   </div>
 </div>
